@@ -5,12 +5,17 @@
     <title>Title</title>
 </head>
 <body>
-
+<div id="app">
+    <h1>{{name}}}</h1>
+    <h2>{{dog.name}}</h2>
+    <h3>{{cats[2].name}}</h3>
+</div>
 </body>
 
 <script src="../dist/vue.js"></script>
 <script>
     const vm = new Vue({
+        el: '#app',
         data() {
             return {
                 name: 'init',

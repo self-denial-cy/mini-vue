@@ -1,4 +1,5 @@
 import {initState} from './state'
+import {compileToFunction} from './compiler/index'
 
 export function initMixin(Vue) {
     /* 初始化 */
@@ -10,5 +11,27 @@ export function initMixin(Vue) {
 
         /* 初始化状态 */
         initState(vm)
+
+        if (options.el) {
+            vm.$mount(options.el)
+        }
+    }
+
+    Vue.prototype.$mount = function (el) {
+        const vm = this
+        el = document.querySelector(el)
+        const opts = vm.$options
+        if (!opts.render) {
+            let template
+            if (!opts.template && el) {
+                template = el.outerHTML
+            } else {
+                template = opts.template
+            }
+            if (template) {
+                // 在这里，对模板进行编译
+                const render = compileToFunction(template)
+            }
+        }
     }
 }
