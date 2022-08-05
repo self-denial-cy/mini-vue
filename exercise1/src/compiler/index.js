@@ -1,10 +1,4 @@
-const ncname = `[a-zA-Z_][\\-\\.0-9_a-zA-Z]*`
-const qnameCapture = `((?:${ncname}\\:)?${ncname})`
-const startTagOpen = new RegExp(`^<${qnameCapture}`)
-const endTag = new RegExp(`^<\\/${qnameCapture}[^>]*>`)
-const attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/
-const startTagClose = /^\s*(\/?)>/
-const defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g
+import {parseHTML, ELEMENT_TYPE, TEXT_TYPE, defaultTagRE} from './parse'
 
 export function compileToFunction(template) {
     /*
@@ -14,68 +8,72 @@ export function compileToFunction(template) {
 
     // 第一步：将 template 转换为 ast 语法树
     let ast = parseHTML(template)
+
+    console.log(ast)
+
+    // 第二步：生成 render 方法
+    console.log(codegen(ast))
 }
 
-function parseHTML(html) {
-    // html 以 < 开始
-    while (html) {
-        // 如果 textEnd 为 0 说明是一个开始标签或者是结束标签
-        // 如果 textEnd 大于 0 说明就是文本的结束位置
-        let textEnd = html.indexOf('<')
-        if (textEnd === 0) {
-            // 开始标签的匹配结果
-            const startTagMatch = parseStartTag()
-            if (startTagMatch) {
-                console.log(html)
-                continue
-            }
+function codegen(ast) {
+    const children = genChildren(ast.children)
+    const code = `_c("${ast.tag}",${
+        ast.attrs && ast.attrs.length ? genProps(ast.attrs) : 'null'
+    }${
+        ast.children && ast.children.length ? `,${children}` : ''
+    })`
+    return code
+}
 
-            // 结束标签的匹配结果
-            const endTagMatch = html.match(endTag)
-            if (endTagMatch) {
-                advance(endTagMatch[0].length)
-                continue
-            }
+function genProps(attrs) {
+    let str = ''
+    for (let i = 0; i < attrs.length; i++) {
+        const attr = attrs[i]
+        if (attr.name === 'style') {
+            const styles = {}
+            attr.value.split(';').forEach(item => {
+                const [key, val] = item.split(':')
+                styles[key] = val
+            })
+            attr.value = styles
         }
-        if (textEnd > 0) {
-            let text = html.substring(0, textEnd) // 文本内容
-            if (text) {
-                advance(text.length)
-            }
-        }
+        str += `${attr.name}:${JSON.stringify(attr.value)},`
     }
+    return `{${str.slice(0, -1)}}`
+}
 
-    function parseStartTag() {
-        const start = html.match(startTagOpen)
-        if (start) {
-            const match = {
-                tagName: start[1], // 标签名
-                attrs: []
+function genChildren(children) {
+    return children.map(child => gen(child)).join(',')
+}
+
+function gen(child) {
+    if (child.type === ELEMENT_TYPE) {
+        // 元素
+        return codegen(child)
+    } else if (child.type === TEXT_TYPE) {
+        // 文本
+        const text = child.text
+        if (!text.match(defaultTagRE)) {
+            // 纯文本，不是模板语法
+            return `_v(${JSON.stringify(text)})`
+        } else {
+            // 包含模板语法的情况
+            const tokens = []
+            let match
+            defaultTagRE.lastIndex = 0 // 包含 g 的正则每次使用前需要将查询索引重置为 0
+            let lastIndex = 0
+            while (match = defaultTagRE.exec(text)) {
+                const index = match.index // 匹配到的 index
+                if (index > lastIndex) {
+                    tokens.push(JSON.stringify(text.slice(lastIndex, index)))
+                }
+                tokens.push(`_s(${match[1].trim()})`)
+                lastIndex = index + match[0].length
             }
-            advance(start[0].length)
-
-            // 如果不是开始标签的结束，且一直匹配到属性，就一直匹配下去
-            let attr, end
-            while (!(end = html.match(startTagClose)) && (attr = html.match(attribute))) {
-                advance(attr[0].length)
-                match.attrs.push({
-                    name: attr[1],
-                    value: attr[3] || attr[4] || attr[5]
-                })
+            if (lastIndex < text.length) {
+                tokens.push(JSON.stringify(text.slice(lastIndex)))
             }
-
-            if (end) {
-                advance(end[0].length)
-            }
-
-            return match
+            return `_v(${tokens.join('+')})`
         }
-
-        // 不是开始标签
-        return false
-    }
-
-    function advance(len) {
-        html = html.substring(len)
     }
 }
