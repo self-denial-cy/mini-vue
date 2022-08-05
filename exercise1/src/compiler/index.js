@@ -11,8 +11,13 @@ export function compileToFunction(template) {
 
     console.log(ast)
 
-    // 第二步：生成 render 方法
-    console.log(codegen(ast))
+    // 第二步：生成 render 方法，调用 render 方法时，通过 call 方法传入当前 Vue 实例
+    const code = codegen(ast)
+    console.log(code)
+    // 模板语法的实现原理：with + new Function
+    const render = new Function(`with(this){return ${code}}`)
+    console.log(render.toString())
+    return render
 }
 
 function codegen(ast) {
