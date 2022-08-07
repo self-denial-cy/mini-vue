@@ -1,6 +1,7 @@
 import {initState} from './state'
 import {compileToFunction} from './compiler/index'
-import {mountComponent} from './lifecycle'
+import {mountComponent, callHook} from './lifecycle'
+import {mergeOptions} from './utils'
 
 export function initMixin(Vue) {
     /* 初始化 */
@@ -8,10 +9,14 @@ export function initMixin(Vue) {
         const vm = this
 
         /* 在实例上保存配置对象 */
-        vm.$options = options
+        vm.$options = mergeOptions(vm.constructor.options, options)
 
+        console.log(vm.$options)
+
+        callHook(vm, 'beforeCreated')
         /* 初始化状态 */
         initState(vm)
+        callHook(vm, 'created')
 
         if (options.el) {
             vm.$mount(options.el)

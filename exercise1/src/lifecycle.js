@@ -98,3 +98,10 @@ function patchProps(el, props) {
         }
     }
 }
+
+export function callHook(vm, hook) {
+    const handlers = vm.$options[hook]
+    if (handlers) {
+        handlers.forEach(handler => handler.call(vm))
+    }
+}
