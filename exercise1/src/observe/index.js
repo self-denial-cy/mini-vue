@@ -1,5 +1,6 @@
 /* 响应式模块 */
 import {newArrayProto} from './array'
+import Dep from './dep'
 
 export function observe(data) {
     if (typeof data !== 'object' || data === null) {
@@ -45,12 +46,16 @@ class Observer {
 }
 
 export function defineReactive(target, key, value) {
+    const dep = new Dep() // 闭包空间不会被销毁，每个属性都有自己的 Dep 空间
     /* 递归处理 */
     observe(value)
     /* 这里使用一个闭包 */
     /* 属性劫持 */
     Object.defineProperty(target, key, {
         get() {
+            if (Dep.target) {
+                dep.depend()
+            }
             return value
         },
         set(v) {
@@ -58,6 +63,7 @@ export function defineReactive(target, key, value) {
             // 赋新值时，如果是引用类型，继续劫持
             observe(v)
             value = v
+            dep.notify()
         }
     })
 }

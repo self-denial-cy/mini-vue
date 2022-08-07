@@ -1,4 +1,5 @@
 import {createElementVNode, createTextVNode} from './vdom/index'
+import Watcher from './observe/watcher'
 
 export function initLifeCycle(Vue) {
     // 根据 虚拟dom 生成 真实dom
@@ -40,7 +41,13 @@ export function mountComponent(vm, el) {
     * 第二部：根据 虚拟dom 生成 真实dom
     * 第三步：将 真实dom 插入到 el 中
     * */
-    vm._update(vm._render())
+    // vm._update(vm._render())
+
+    const updateComponent = () => {
+        vm._update(vm._render())
+    }
+
+    console.log(new Watcher(vm, updateComponent, true))
 }
 
 // elOrVNode 在初始化时是 el，在更新时是 old vnode
