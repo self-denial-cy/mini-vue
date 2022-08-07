@@ -10,17 +10,21 @@ export function initLifeCycle(Vue) {
         // patch 既有初始化功能，又有更新功能
         vm.$el = patch(el, vnode)
     }
+
     Vue.prototype._render = function () {
         const vm = this
         // 将当前 Vue 实例传入
         return vm.$options.render.call(vm)
     }
+
     Vue.prototype._c = function () {
         return createElementVNode(this, ...arguments)
     }
+
     Vue.prototype._v = function () {
         return createTextVNode(this, ...arguments)
     }
+
     Vue.prototype._s = function (val) {
         if (typeof val === 'object') {
             return JSON.stringify(val)

@@ -6,6 +6,7 @@ function Vue(options) {
 }
 
 initMixin(Vue)
+
 initLifeCycle(Vue)
 
 /*
