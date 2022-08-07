@@ -10,7 +10,7 @@
     <h2>{{dog.name}}汪</h2>
     <h3>{{cats[2].name}}</h3>
     <h4>纯文本</h4>
-    <h5>{{num}}</h5>
+    <h5>{{count}}</h5>
 </div>
 </body>
 
@@ -27,14 +27,22 @@
                 cats: ['1', '2', {
                     name: '贝妮大小姐'
                 }],
-                num: 0
+                count: 0
             }
         }
     })
 
-    /*setInterval(() => {
-        vm.num++
-    }, 1000)*/
+    vm.count = 1
+    vm.count = 2
+    vm.count = 3
+    vm.count = 4
+    vm.count = 5
+
+    console.log(document.getElementById('app').innerHTML)
+
+    vm.$nextTick(() => {
+        console.log(document.getElementById('app').innerHTML)
+    })
 
     console.log(vm)
 </script>
