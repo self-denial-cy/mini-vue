@@ -1,4 +1,4 @@
-import Dep from './dep'
+import Dep, {pushTarget, popTarget} from './dep'
 
 // Watcher id 用于识别 Watcher
 let id = 0
@@ -9,19 +9,22 @@ class Watcher {
     * vm Watcher 对应的组件实例
     * fn 对应组件的渲染方法
     * */
-    constructor(vm, fn, isRender) {
+    constructor(vm, fn, options) {
         this.id = id++
-        this.renderWatcher = isRender
+        this.options = options
         this.getter = fn // getter 意味着调用该方法会发生属性取值
         this.deps = [] // Watcher 收集 Dep 为了后续的清理工作
         this.depIds = new Set() // 去重
-        this.get()
+        this.lazy = options.lazy
+        this.dirty = this.lazy
+
+        this.lazy ? undefined : this.get()
     }
 
     get() {
-        Dep.target = this // 将当前 Watcher 实例暴露给 Dep
+        pushTarget(this) // 将当前 Watcher 实例暴露给 Dep
         this.getter() // 在属性取值期间，当前 Watcher 实例对所有涉及到取值操作的属性可见
-        Dep.target = null // 属性取值完毕之后重置
+        popTarget() // 属性取值完毕之后重置
     }
 
     addDep(dep) {

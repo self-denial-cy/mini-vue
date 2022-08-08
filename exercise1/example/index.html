@@ -11,6 +11,7 @@
     <h3>{{cats[2].name}}</h3>
     <h4>{{birds}}</h4>
     <h5>{{count}}</h5>
+    <h6>{{hero}}</h6>
     <span>纯文本</span>
 </div>
 </body>
@@ -43,7 +44,15 @@
                     list: [{age: 123}]
                 }],
                 birds: ['吃了么', '吃的啥', '喝了么', []],
-                count: 0
+                count: 0,
+                firstName: '猪猪',
+                lastName: '侠'
+            }
+        },
+        computed: {
+            hero() {
+                console.log('run computed')
+                return this.firstName + this.lastName
             }
         }
     })
