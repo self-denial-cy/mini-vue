@@ -15,6 +15,10 @@ export function observe(data) {
 
 class Observer {
     constructor(data) {
+        // 给 data 中的每一个对象或数组本身都设置一个 Dep
+        // 用于后续对象的属性新增/删除，数组变异方法修改数组后的视图更新
+        this.dep = new Dep()
+
         // 防止死循环
         // data.__ob__ = this
         Object.defineProperty(data, '__ob__', {
@@ -45,16 +49,39 @@ class Observer {
     }
 }
 
+// 多层嵌套的 data 会导致递归，递归层级多了会导致性能问题
+// 所以在使用中，尽量保证 data 数据结构的扁平化
+function dependArray(arr) {
+    for (let i = 0; i < arr.length; i++) {
+        const current = arr[i]
+        // 恶心且巧妙，覆盖了所有的嵌套情况
+        // 至此，除了 data 根对象，所有的数组和对象本身的 Observer 实例上的 Dep 完成了依赖收集
+        // 对象上所有的 key 的闭包空间中的 Dep 完成了依赖收集
+        current.__ob__ && current.__ob__.dep.depend()
+        if (Array.isArray(current)) {
+            dependArray(current)
+        }
+    }
+}
+
 export function defineReactive(target, key, value) {
     const dep = new Dep() // 闭包空间不会被销毁，每个属性都有自己的 Dep 空间
     /* 递归处理 */
-    observe(value)
+    const childObserver = observe(value) // value 为对象或数组时，会返回 Observer 实例，否则为 undefined
     /* 这里使用一个闭包 */
     /* 属性劫持 */
     Object.defineProperty(target, key, {
         get() {
             if (Dep.target) {
                 dep.depend()
+                if (childObserver) {
+                    // 让对象或数组本身也进行依赖收集
+                    childObserver.dep.depend()
+                    // 特殊情况，数组嵌套的情况
+                    if (Array.isArray(value)) {
+                        dependArray(value)
+                    }
+                }
             }
             return value
         },

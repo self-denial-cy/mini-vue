@@ -31,6 +31,9 @@ methods.forEach(method => {
             ob.observeArray(inserted)
         }
 
+        // 数组本身发生变化，数组的 Observer 上的 Dep 通知对应的 Watcher 进行视图更新
+        ob.dep.notify()
+
         // 返回执行结果
         return result
     }
