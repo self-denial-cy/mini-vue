@@ -47,7 +47,7 @@ export function mountComponent(vm, el) {
         vm._update(vm._render())
     }
 
-    console.log(new Watcher(vm, updateComponent, true))
+    new Watcher(vm, updateComponent, true)
 }
 
 // elOrVNode 在初始化时是 el，在更新时是 old vnode

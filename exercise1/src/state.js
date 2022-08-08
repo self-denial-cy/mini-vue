@@ -1,5 +1,6 @@
 import {observe} from './observe/index'
 import Watcher from './observe/watcher'
+import Dep from './observe/dep'
 
 export function initState(vm) {
     const opts = vm.$options
@@ -45,8 +46,9 @@ function initComputed(vm) {
         const userDef = computed[key]
 
         const fn = typeof userDef === 'function' ? userDef : userDef.get
+        // 在渲染 Watcher 定义之前，所有的计算属性 Watcher 已经定义好了
         watchers[key] = new Watcher(vm, fn, {
-            lazy: true
+            lazy: true // lazy 标识该 Watcher 是计算属性 Watcher
         })
 
         defineComputed(vm, key, userDef)
@@ -54,7 +56,7 @@ function initComputed(vm) {
 }
 
 function defineComputed(target, key, userDef) {
-    const getter = typeof userDef === 'function' ? userDef : userDef.get
+    // const getter = typeof userDef === 'function' ? userDef : userDef.get
     const setter = userDef.set || (() => {
     })
     Object.defineProperty(target, key, {
@@ -63,8 +65,17 @@ function defineComputed(target, key, userDef) {
     })
 }
 
+// 🤢 绕来绕去的计算属性 本质上基于惰性 Watcher 实现
 function createComputedGetter(key) {
     return function () {
         const watcher = this._computedWatchers[key]
+        if (watcher.dirty) {
+            watcher.evaluate()
+        }
+        // 通知计算属性依赖的 Dep 继续向上收集 Watcher，直到最终收集到 渲染 Watcher
+        if (Dep.target) {
+            watcher.depend()
+        }
+        return watcher.value
     }
 }

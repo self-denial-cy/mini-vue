@@ -1,4 +1,4 @@
-import Dep, {pushTarget, popTarget} from './dep'
+import {pushTarget, popTarget} from './dep'
 
 // Watcher id 用于识别 Watcher
 let id = 0
@@ -10,6 +10,7 @@ class Watcher {
     * fn 对应组件的渲染方法
     * */
     constructor(vm, fn, options) {
+        this.vm = vm
         this.id = id++
         this.options = options
         this.getter = fn // getter 意味着调用该方法会发生属性取值
@@ -21,10 +22,23 @@ class Watcher {
         this.lazy ? undefined : this.get()
     }
 
+    evaluate() {
+        this.value = this.get()
+        this.dirty = false
+    }
+
+    depend() {
+        let i = this.deps.length
+        while (i--) {
+            this.deps[i].depend()
+        }
+    }
+
     get() {
         pushTarget(this) // 将当前 Watcher 实例暴露给 Dep
-        this.getter() // 在属性取值期间，当前 Watcher 实例对所有涉及到取值操作的属性可见
+        const value = this.getter.call(this.vm) // 在属性取值期间，当前 Watcher 实例对所有涉及到取值操作的属性可见
         popTarget() // 属性取值完毕之后重置
+        return value
     }
 
     addDep(dep) {
@@ -37,7 +51,13 @@ class Watcher {
     }
 
     update() {
-        queueWatcher(this)
+        // 当 Dep 通知 Watcher 更新时，将所有的 计算属性 Watcher dirty 重置为 true
+        // 最终异步刷新队列执行 渲染 Watcher，此时所有的计算属性都可以进行重新计算
+        if (this.lazy) {
+            this.dirty = true
+        } else {
+            queueWatcher(this)
+        }
     }
 
     run() {

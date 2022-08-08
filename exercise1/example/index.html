@@ -11,7 +11,7 @@
     <h3>{{cats[2].name}}</h3>
     <h4>{{birds}}</h4>
     <h5>{{count}}</h5>
-    <h6>{{hero}}</h6>
+    <h6>{{hero}} {{hero}} {{hero}}</h6>
     <span>纯文本</span>
 </div>
 </body>
@@ -72,6 +72,7 @@
     setTimeout(() => {
         vm.birds[3].push('喝的啥')
         // vm.birds.push('喝的啥')
+        vm.firstName = ''
     }, 2500)
 
     console.log(vm)
