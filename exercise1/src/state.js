@@ -10,6 +10,9 @@ export function initState(vm) {
     if (opts.computed) {
         initComputed(vm)
     }
+    if (opts.watch) {
+        initWatch(vm)
+    }
 }
 
 function proxy(vm, target, key) {
@@ -78,4 +81,30 @@ function createComputedGetter(key) {
         }
         return watcher.value
     }
+}
+
+function initWatch(vm) {
+    const watch = vm.$options.watch
+
+    // 遍历 watch 对象
+    for (const key in watch) {
+        const handler = watch[key]
+        if (Array.isArray(handler)) {
+            for (let i = 0; i < handler.length; i++) {
+                createWatcher(vm, key, handler[i])
+            }
+        } else {
+            createWatcher(vm, key, handler)
+        }
+    }
+}
+
+// handler 可能有三种情况：方法名，函数，包含 handler、deep、immediate 参数的对象
+function createWatcher(vm, key, handler) {
+    // 这里暂时只考虑前两种情况
+    if (typeof handler === 'string') {
+        // TODO 将 methods 上的方法映射到 vm 上
+        handler = vm[handler]
+    }
+    return vm.$watch(key, handler)
 }

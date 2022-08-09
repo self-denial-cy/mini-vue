@@ -11,7 +11,7 @@ export function initMixin(Vue) {
         /* 在实例上保存配置对象 */
         vm.$options = mergeOptions(vm.constructor.options, options)
 
-        console.log(vm.$options)
+        // console.log(vm.$options)
 
         callHook(vm, 'beforeCreated')
         /* 初始化状态 */

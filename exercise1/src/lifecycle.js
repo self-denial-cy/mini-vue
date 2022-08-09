@@ -6,7 +6,7 @@ export function initLifeCycle(Vue) {
     Vue.prototype._update = function (vnode) {
         const vm = this
         const el = vm.$el
-        console.log(vnode)
+        // console.log(vnode)
 
         // patch 既有初始化功能，又有更新功能
         vm.$el = patch(el, vnode)
@@ -59,7 +59,7 @@ function patch(elOrVNode, vnode) {
         const el = elOrVNode
         const parentEl = el.parentNode
         const newEl = createEl(vnode)
-        console.log(newEl)
+        // console.log(newEl)
         parentEl.insertBefore(newEl, el.nextSibling)
         parentEl.removeChild(el)
 

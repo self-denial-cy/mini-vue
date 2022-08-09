@@ -2,15 +2,22 @@ import {initMixin} from './init'
 import {initLifeCycle} from './lifecycle'
 import {nextTick} from './observe/watcher'
 import {initGlobalAPI} from './global-api'
+import Watcher from './observe/watcher'
 
 function Vue(options) {
     this._init(options)
 }
 
 Vue.prototype.$nextTick = nextTick
+
 initMixin(Vue)
 initLifeCycle(Vue)
 initGlobalAPI(Vue)
+
+// exprOrFn 有两种情况：字符串 key 或者 函数
+Vue.prototype.$watch = function (exprOrFn, cb) {
+    new Watcher(this, exprOrFn, {user: true}, cb)
+}
 
 /*
 * Vue 核心流程

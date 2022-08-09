@@ -20,16 +20,16 @@
 <script>
     Vue.mixin({
         created() {
-            console.log('mixin1')
+            // console.log('mixin1')
         }
     })
     Vue.mixin({
         created() {
-            console.log('mixin2')
+            // console.log('mixin2')
         }
     })
 
-    console.log(Vue.options)
+    // console.log(Vue.options)
 
     const vm = new Vue({
         el: '#app',
@@ -51,8 +51,13 @@
         },
         computed: {
             hero() {
-                console.log('run computed')
+                // console.log('run computed')
                 return this.firstName + this.lastName
+            }
+        },
+        watch: {
+            firstName(newVal, oldVal) {
+                console.log(newVal, oldVal)
             }
         }
     })
@@ -63,19 +68,23 @@
     vm.count = 4
     vm.count = 5
 
-    console.log(document.getElementById('app').innerHTML)
+    // console.log(document.getElementById('app').innerHTML)
 
     vm.$nextTick(() => {
-        console.log(document.getElementById('app').innerHTML)
+        // console.log(document.getElementById('app').innerHTML)
     })
 
     setTimeout(() => {
         vm.birds[3].push('喝的啥')
         // vm.birds.push('喝的啥')
-        vm.firstName = ''
+        vm.firstName = '嘎嘎1'
+        vm.firstName = '嘎嘎2'
+        vm.firstName = '嘎嘎3'
     }, 2500)
 
-    console.log(vm)
+    vm.firstName = '嘎嘎4'
+
+    // console.log(vm)
 </script>
 
 </html>

@@ -7,19 +7,34 @@ let id = 0
 class Watcher {
     /*
     * vm Watcher 对应的组件实例
-    * fn 对应组件的渲染方法
+    * exprOrFn 对应组件的渲染方法
     * */
-    constructor(vm, fn, options) {
+    constructor(vm, exprOrFn, options, cb) {
         this.vm = vm
         this.id = id++
         this.options = options
-        this.getter = fn // getter 意味着调用该方法会发生属性取值
+
+        if (typeof exprOrFn === 'string') {
+            this.getter = function () {
+                return vm[exprOrFn]
+            }
+        } else {
+            this.getter = exprOrFn // getter 意味着调用该方法会发生属性取值
+        }
+
+
         this.deps = [] // Watcher 收集 Dep 为了后续的清理工作
         this.depIds = new Set() // 去重
+
         this.lazy = options.lazy
         this.dirty = this.lazy
 
-        this.lazy ? undefined : this.get()
+        // 标识是用户自己创建的 Watcher
+        this.user = options.user
+
+        this.cb = cb
+
+        this.value = this.lazy ? undefined : this.get()
     }
 
     evaluate() {
@@ -61,7 +76,11 @@ class Watcher {
     }
 
     run() {
-        this.get()
+        const oldVal = this.value
+        const newVal = this.value = this.get()
+        if (this.user) {
+            this.cb.call(this.vm, newVal, oldVal)
+        }
     }
 }
 
