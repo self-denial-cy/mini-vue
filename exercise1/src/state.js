@@ -1,5 +1,5 @@
 import {observe} from './observe/index'
-import Watcher from './observe/watcher'
+import Watcher, {nextTick} from './observe/watcher'
 import Dep from './observe/dep'
 
 export function initState(vm) {
@@ -107,4 +107,13 @@ function createWatcher(vm, key, handler) {
         handler = vm[handler]
     }
     return vm.$watch(key, handler)
+}
+
+export function initStateMixin(Vue) {
+    Vue.prototype.$nextTick = nextTick
+
+    // exprOrFn 有两种情况：字符串 key 或者 函数
+    Vue.prototype.$watch = function (exprOrFn, cb) {
+        new Watcher(this, exprOrFn, {user: true}, cb)
+    }
 }
