@@ -120,5 +120,22 @@ function unMountChildren(el, children) {
 
 // 完整的 diff 算法
 function updateChildren(el, prevChildren, nextChildren) {
-    // TODO
+    // 比较子级节点时，会有些特殊手段，针对特殊情况，提高性能
+    // 操作列表时，经常会使用 push shift pop unshift reverse sort，针对这些情况做一些优化
+    // Vue2 使用双指针，即双端 diff 优化
+    let prevStartIndex = 0
+    let nextStartIndex = 0
+    let prevEndIndex = prevChildren.length - 1
+    let nextEndIndex = nextChildren.length - 1
+
+    let prevStartVNode = prevChildren[prevStartIndex]
+    let nextStartVNode = nextChildren[nextStartIndex]
+    let prevEndVNode = prevChildren[prevEndIndex]
+    let nextEndVNode = nextChildren[nextEndIndex]
+
+    // 双端 diff
+    while (prevStartIndex <= prevEndIndex && nextStartIndex <= nextEndIndex) {
+        // 双方有任一方 头部指针大于尾部指针 终止循环
+        
+    }
 }
