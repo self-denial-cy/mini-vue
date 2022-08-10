@@ -17,7 +17,7 @@ export function patch(elOrVNode, vnode) {
     }
 }
 
-function createEl(vnode) {
+export function createEl(vnode) {
     const {tag, data, children, text} = vnode
     if (typeof tag === 'string') {
         // 标签
@@ -35,7 +35,7 @@ function createEl(vnode) {
     return vnode.el
 }
 
-function patchProps(el, props) {
+export function patchProps(el, props) {
     for (const key in props) {
         if (key === 'style') {
             for (const styleKey in props['style']) {
