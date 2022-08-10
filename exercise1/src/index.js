@@ -3,6 +3,10 @@ import {initLifeCycle} from './lifecycle'
 import {initGlobalAPI} from './global-api'
 import {initStateMixin} from './state'
 
+// TEST
+import {compileToFunction} from './compiler/index'
+import {createEl, patch} from './vdom/patch'
+
 function Vue(options) {
     this._init(options)
 }
@@ -11,6 +15,31 @@ initMixin(Vue)
 initLifeCycle(Vue)
 initGlobalAPI(Vue)
 initStateMixin(Vue)
+
+// 虚拟节点 diff 测试代码
+const template1 = `<li key="a" style="color: aquamarine;background-color: aqua">{{str}}</li>`
+const render1 = compileToFunction(template1)
+const prevVNode = render1.call(new Vue({
+    data() {
+        return {
+            str: 'old vnode'
+        }
+    }
+}))
+document.body.appendChild(createEl(prevVNode))
+const template2 = `<li key="a" style="background-color: black;color: white">{{str}}</li>`
+const render2 = compileToFunction(template2)
+const nextVNode = render2.call(new Vue({
+    data() {
+        return {
+            str: 'new vnode'
+        }
+    }
+}))
+// diff 算法 平级比较算法，父与父 diff 子与子 diff
+setTimeout(() => {
+    patch(prevVNode, nextVNode)
+}, 1500)
 
 /*
 * Vue 核心流程

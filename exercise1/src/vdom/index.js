@@ -19,3 +19,8 @@ function vnode(vm, tag, key, data, children, text) {
         text
     }
 }
+
+// 比较两个虚拟节点是否是同一个节点（通过 tag key 比较）
+export function isSameVNode(prevVNode, nextVNode) {
+    return prevVNode.tag === nextVNode.tag && prevVNode.key === nextVNode.key
+}
