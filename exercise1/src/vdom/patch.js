@@ -148,6 +148,18 @@ function updateChildren(el, prevChildren, nextChildren) {
             patchVNode(prevEndVNode, nextEndVNode)
             prevEndVNode = prevChildren[--prevEndIndex]
             nextEndVNode = nextChildren[--nextEndIndex]
+        } else if (isSameVNode(prevEndVNode, nextStartVNode)) {
+            // 旧尾新头相比 a b c d ====> d a b c
+            patchVNode(prevEndVNode, nextStartVNode)
+            el.insertBefore(prevEndVNode.el, prevStartVNode.el)
+            prevEndVNode = prevChildren[--prevEndIndex]
+            nextStartVNode = nextChildren[++nextStartIndex]
+        } else if (isSameVNode(prevStartVNode, nextEndVNode)) {
+            // 旧头新尾相比 a b c d ====> b c d a
+            patchVNode(prevStartVNode, nextEndVNode)
+            el.insertBefore(prevStartVNode.el, prevEndVNode.el.nextSibling)
+            prevStartVNode = prevChildren[++prevStartIndex]
+            nextEndVNode = [--nextEndIndex]
         }
     }
 

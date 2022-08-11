@@ -17,7 +17,7 @@ initGlobalAPI(Vue)
 initStateMixin(Vue)
 
 // 虚拟节点 diff 测试代码
-const template1 = `<ul key="ul" style="color: red"><li key="d">d</li><li key="a">a</li><li key="b">b</li><li key="c">c</li></ul>`
+const template1 = `<ul key="ul" style="color: red"><li key="a">a</li><li key="b">b</li><li key="c">c</li><li key="d">d</li></ul>`
 const render1 = compileToFunction(template1)
 const prevVNode = render1.call(new Vue({
     data() {
@@ -27,7 +27,7 @@ const prevVNode = render1.call(new Vue({
     }
 }))
 document.body.appendChild(createEl(prevVNode))
-const template2 = `<ul key="ul" style="color: blue"><li key="a">a</li><li key="b">b</li><li key="c">c</li></ul>`
+const template2 = `<ul key="ul" style="color: blue"><li key="d">d</li><li key="c">c</li><li key="b">b</li><li key="a">a</li></ul>`
 const render2 = compileToFunction(template2)
 const nextVNode = render2.call(new Vue({
     data() {
