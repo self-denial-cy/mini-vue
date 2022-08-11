@@ -135,10 +135,25 @@ function updateChildren(el, prevChildren, nextChildren) {
     let prevEndVNode = prevChildren[prevEndIndex]
     let nextEndVNode = nextChildren[nextEndIndex]
 
+    function makeIndexByKey(children) {
+        const map = {}
+        children.forEach((child, index) => {
+            map[child.key] = index
+        })
+        return map
+    }
+
+    // prevChildren 的映射表
+    const map = makeIndexByKey(prevChildren)
+
     // 双端 diff
     while (prevStartIndex <= prevEndIndex && nextStartIndex <= nextEndIndex) {
         // 双方有任一方 头部指针大于尾部指针 终止循环
-        if (isSameVNode(prevStartVNode, nextStartVNode)) {
+        if (!prevStartVNode) {
+            prevStartVNode = prevChildren[++prevStartIndex]
+        } else if (!prevEndVNode) {
+            prevEndVNode = prevChildren[--prevEndIndex]
+        } else if (isSameVNode(prevStartVNode, nextStartVNode)) {
             // 头头相比
             patchVNode(prevStartVNode, nextStartVNode) // 如果是同一个节点，则递归 diff
             prevStartVNode = prevChildren[++prevStartIndex]
@@ -160,6 +175,23 @@ function updateChildren(el, prevChildren, nextChildren) {
             el.insertBefore(prevStartVNode.el, prevEndVNode.el.nextSibling)
             prevStartVNode = prevChildren[++prevStartIndex]
             nextEndVNode = [--nextEndIndex]
+        } else {
+            // 乱序 diff
+            // 根据 prevChildren 生成映射表，以尽量复用老节点
+            // nextChildren 去映射表中寻找映射节点，找到则移动，找不到则添加
+            // 最终映射表中还剩下的则被删除
+            const moveIndex = map[nextStartVNode.key]
+            if (moveIndex !== undefined) {
+                // 有老节点可以复用
+                const moveVNode = prevChildren[moveIndex]
+                el.insertBefore(moveVNode.el, prevStartVNode.el)
+                prevChildren[moveIndex] = undefined // 标识该节点已经被移走
+                patchVNode(moveVNode, nextStartVNode)
+            } else {
+                // 没有老节点可以复用，只能生成新节点插入
+                el.insertBefore(createEl(nextStartVNode), prevStartVNode.el)
+            }
+            nextStartVNode = nextChildren[++nextStartIndex]
         }
     }
 
@@ -175,7 +207,7 @@ function updateChildren(el, prevChildren, nextChildren) {
     // a b c d e ====> a b c 类似的优化  d a b c ====> a b c 类似的优化
     if (prevStartIndex <= prevEndIndex) {
         for (let i = prevStartIndex; i <= prevEndIndex; i++) {
-            el.removeChild(prevChildren[i].el)
+            prevChildren[i] && el.removeChild(prevChildren[i].el)
         }
     }
 }

@@ -27,7 +27,7 @@ const prevVNode = render1.call(new Vue({
     }
 }))
 document.body.appendChild(createEl(prevVNode))
-const template2 = `<ul key="ul" style="color: blue"><li key="d">d</li><li key="c">c</li><li key="b">b</li><li key="a">a</li></ul>`
+const template2 = `<ul key="ul" style="color: blue"><li key="b">b</li><li key="m">m</li><li key="a">a</li><li key="p">p</li><li key="c">c</li><li key="q">q</li></ul>`
 const render2 = compileToFunction(template2)
 const nextVNode = render2.call(new Vue({
     data() {
