@@ -18,6 +18,7 @@ export function patch(elOrVNode, vnode) {
         // diff 更新
         const prevVNode = elOrVNode
         const nextVNode = vnode
+        console.log(prevVNode, nextVNode)
         /*
         * 1.两个节点不是同一个节点，直接删除老的换上新的（无需向下比对了）
         * 2.两个节点是同一个节点（判断节点的 tag key），比较两个节点的属性是否有差异（复用老的节点，将差异的属性更新）
@@ -90,8 +91,8 @@ function patchVNode(prevVNode, nextVNode) {
     // 标签属性比较
     patchProps(el, prevVNode.data, nextVNode.data)
     // 子节点比较：一方有一方无、两方都有
-    const prevChildren = prevVNode.children
-    const nextChildren = nextVNode.children
+    const prevChildren = prevVNode.children || []
+    const nextChildren = nextVNode.children || []
     if (prevChildren.length && nextChildren.length) {
         // 完整的 diff 算法
         updateChildren(el, prevChildren, nextChildren)
@@ -102,6 +103,7 @@ function patchVNode(prevVNode, nextVNode) {
         // 只有老 children 删除
         unMountChildren(el, prevChildren)
     }
+    return el
 }
 
 function mountChildren(el, children) {
@@ -136,6 +138,33 @@ function updateChildren(el, prevChildren, nextChildren) {
     // 双端 diff
     while (prevStartIndex <= prevEndIndex && nextStartIndex <= nextEndIndex) {
         // 双方有任一方 头部指针大于尾部指针 终止循环
-        
+        if (isSameVNode(prevStartVNode, nextStartVNode)) {
+            // 头头相比
+            patchVNode(prevStartVNode, nextStartVNode) // 如果是同一个节点，则递归 diff
+            prevStartVNode = prevChildren[++prevStartIndex]
+            nextStartVNode = nextChildren[++nextStartIndex]
+        } else if (isSameVNode(prevEndVNode, nextEndVNode)) {
+            // 尾尾相比
+            patchVNode(prevEndVNode, nextEndVNode)
+            prevEndVNode = prevChildren[--prevEndIndex]
+            nextEndVNode = nextChildren[--nextEndIndex]
+        }
+    }
+
+    // a b c ====> a b c d e 类似的优化  a b c ====> e d a b c 类似的优化
+    if (nextStartIndex <= nextEndIndex) {
+        for (let i = nextStartIndex; i <= nextEndIndex; i++) {
+            // 这里可能是尾部追加，也可能是头部追加
+            const anchor = nextChildren[nextEndIndex + 1] ? nextChildren[nextEndIndex + 1].el : null
+            el.insertBefore(createEl(nextChildren[i]), anchor) // anchor 为 null 的时候，insertBefore 的作用相当于 appendChild
+        }
+    }
+
+    // a b c d e ====> a b c 类似的优化  d a b c ====> a b c 类似的优化
+    if (prevStartIndex <= prevEndIndex) {
+        for (let i = prevStartIndex; i <= prevEndIndex; i++) {
+            el.removeChild(prevChildren[i].el)
+        }
     }
 }
+

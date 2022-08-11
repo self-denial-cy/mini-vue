@@ -17,13 +17,7 @@ initGlobalAPI(Vue)
 initStateMixin(Vue)
 
 // 虚拟节点 diff 测试代码
-const template1 = `
-<ul key="a">
-<li>a</li>
-<li>b</li>
-<li>c</li>
-</ul>
-`
+const template1 = `<ul key="ul" style="color: red"><li key="d">d</li><li key="a">a</li><li key="b">b</li><li key="c">c</li></ul>`
 const render1 = compileToFunction(template1)
 const prevVNode = render1.call(new Vue({
     data() {
@@ -33,14 +27,7 @@ const prevVNode = render1.call(new Vue({
     }
 }))
 document.body.appendChild(createEl(prevVNode))
-const template2 = `
-<ul key="a">
-<li>a</li>
-<li>b</li>
-<li>c</li>
-<li>d</li>
-</ul>
-`
+const template2 = `<ul key="ul" style="color: blue"><li key="a">a</li><li key="b">b</li><li key="c">c</li></ul>`
 const render2 = compileToFunction(template2)
 const nextVNode = render2.call(new Vue({
     data() {
@@ -51,8 +38,8 @@ const nextVNode = render2.call(new Vue({
 }))
 // diff 算法 平级比较算法，父与父 diff 子与子 diff
 setTimeout(() => {
-    patch(prevVNode, nextVNode)
-}, 1500)
+    console.log(patch(prevVNode, nextVNode))
+}, 2500)
 
 /*
 * Vue 核心流程
