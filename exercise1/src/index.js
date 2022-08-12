@@ -4,8 +4,8 @@ import {initGlobalAPI} from './global-api'
 import {initStateMixin} from './state'
 
 // TEST
-import {compileToFunction} from './compiler/index'
-import {createEl, patch} from './vdom/patch'
+// import {compileToFunction} from './compiler/index'
+// import {createEl, patch} from './vdom/patch'
 
 function Vue(options) {
     this._init(options)
@@ -17,29 +17,29 @@ initGlobalAPI(Vue)
 initStateMixin(Vue)
 
 // 虚拟节点 diff 测试代码
-const template1 = `<ul key="ul" style="color: red"><li key="a">a</li><li key="b">b</li><li key="c">c</li><li key="d">d</li></ul>`
-const render1 = compileToFunction(template1)
-const prevVNode = render1.call(new Vue({
-    data() {
-        return {
-            str: 'old vnode'
-        }
-    }
-}))
-document.body.appendChild(createEl(prevVNode))
-const template2 = `<ul key="ul" style="color: blue"><li key="b">b</li><li key="m">m</li><li key="a">a</li><li key="p">p</li><li key="c">c</li><li key="q">q</li></ul>`
-const render2 = compileToFunction(template2)
-const nextVNode = render2.call(new Vue({
-    data() {
-        return {
-            str: 'new vnode'
-        }
-    }
-}))
+// const template1 = `<ul key="ul" style="color: red"><li key="a">a</li><li key="b">b</li><li key="c">c</li><li key="d">d</li></ul>`
+// const render1 = compileToFunction(template1)
+// const prevVNode = render1.call(new Vue({
+//     data() {
+//         return {
+//             str: 'old vnode'
+//         }
+//     }
+// }))
+// document.body.appendChild(createEl(prevVNode))
+// const template2 = `<ul key="ul" style="color: blue"><li key="b">b</li><li key="m">m</li><li key="a">a</li><li key="p">p</li><li key="c">c</li><li key="q">q</li></ul>`
+// const render2 = compileToFunction(template2)
+// const nextVNode = render2.call(new Vue({
+//     data() {
+//         return {
+//             str: 'new vnode'
+//         }
+//     }
+// }))
 // diff 算法 平级比较算法，父与父 diff 子与子 diff
-setTimeout(() => {
-    console.log(patch(prevVNode, nextVNode))
-}, 2500)
+// setTimeout(() => {
+//     console.log(patch(prevVNode, nextVNode))
+// }, 2500)
 
 /*
 * Vue 核心流程

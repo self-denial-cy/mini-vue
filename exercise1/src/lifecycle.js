@@ -9,8 +9,16 @@ export function initLifeCycle(Vue) {
         const el = vm.$el
         // console.log(vnode)
 
-        // patch 既有初始化功能，又有更新功能
-        vm.$el = patch(el, vnode)
+        const prevVNode = vm._vnode
+        if (prevVNode) {
+            // 已经初始化过了，调用更新功能
+            vm.$el = patch(prevVNode, vnode)
+        } else {
+            // patch 既有初始化功能，又有更新功能
+            vm.$el = patch(el, vnode)
+        }
+
+        vm._vnode = vnode // 保存上一次传入的 vnode
     }
 
     Vue.prototype._render = function () {

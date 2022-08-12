@@ -18,7 +18,7 @@ export function patch(elOrVNode, vnode) {
         // diff 更新
         const prevVNode = elOrVNode
         const nextVNode = vnode
-        console.log(prevVNode, nextVNode)
+        // console.log(prevVNode, nextVNode)
         /*
         * 1.两个节点不是同一个节点，直接删除老的换上新的（无需向下比对了）
         * 2.两个节点是同一个节点（判断节点的 tag key），比较两个节点的属性是否有差异（复用老的节点，将差异的属性更新）
@@ -211,4 +211,3 @@ function updateChildren(el, prevChildren, nextChildren) {
         }
     }
 }
-
