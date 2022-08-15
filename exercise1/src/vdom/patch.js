@@ -2,8 +2,11 @@ import {isSameVNode} from './index'
 
 // elOrVNode 在初始化时是 el，在更新时是 old vnode
 export function patch(elOrVNode, vnode) {
+    if (!elOrVNode) {
+        // 组件的渲染
+        return createEl(vnode)
+    }
     const isRealElement = elOrVNode.nodeType
-
     if (isRealElement) {
         // 初始化
         const el = elOrVNode
@@ -28,14 +31,27 @@ export function patch(elOrVNode, vnode) {
     }
 }
 
+function createComponent(vnode) {
+    const data = vnode.data || {}
+    const init = data.hook && data.hook.init
+    if (init) {
+        init(vnode)
+    }
+    if (vnode.componentInstance) {
+        return true // 说明是组件
+    }
+}
+
 export function createEl(vnode) {
     const {tag, data, children, text} = vnode
     if (typeof tag === 'string') {
+        // 区分是组件还是元素
+        if (createComponent(vnode)) {
+            return vnode.componentInstance.$el
+        }
         // 标签
         vnode.el = document.createElement(tag) // 将真实节点与虚拟节点对应起来，后续方便更新
-
         patchProps(vnode.el, {}, data)
-
         children.forEach(child => {
             vnode.el.appendChild(createEl(child))
         })

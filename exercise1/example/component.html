@@ -16,7 +16,7 @@
     })
 
     const Sub = Vue.extend({
-        template: `<h1>子级构造器</h1>`,
+        template: `<div><h1>子级构造器</h1><parent-btn></parent-btn><child-btn></child-btn></div>`,
         components: {
             'child-btn': {
                 template: `<button>子级按钮</button>`

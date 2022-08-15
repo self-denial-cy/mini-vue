@@ -19,7 +19,10 @@ export function createElementVNode(vm, tag, data, ...children) {
 function createComponentVNode(vm, tag, key, data, children, definition) {
     definition = typeof definition === 'function' ? definition : vm.$options._base.extend(definition)
     data.hook = {
-        init() {
+        init(vnode) {
+            const definition = vnode.componentOptions.definition
+            const instance = vnode.componentInstance = new definition()
+            instance.$mount()
         }
     }
     return vnode(vm, tag, key, data, children, undefined, {definition})
