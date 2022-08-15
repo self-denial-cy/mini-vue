@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+
+</div>
+</body>
+<script src="../dist/vue.js"></script>
+<script>
+    Vue.component('parent-btn', {
+        template: `<button>父级按钮</button>`
+    })
+
+    const Sub = Vue.extend({
+        template: `<h1>子级构造器</h1>`,
+        components: {
+            'child-btn': {
+                template: `<button>子级按钮</button>`
+            }
+        }
+    })
+
+    new Sub().$mount('#app')
+</script>
+</html>

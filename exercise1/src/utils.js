@@ -15,6 +15,17 @@ LIFECYCLE.forEach(hook => {
     }
 })
 
+strats['components'] = function (p, c) {
+    // 构建了组件链，先从自身找，再沿着链向上寻找
+    const components = Object.create(p)
+    if (c) {
+        for (const key in c) {
+            components[key] = c[key]
+        }
+    }
+    return components
+}
+
 export function mergeOptions(parent, child) {
     let options = {}
 
