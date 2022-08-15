@@ -1,6 +1,6 @@
 // 判断是否是原生元素
 const isReservedTag = (tag) => {
-    return ['div', 'a', 'p', 'span', 'button', 'ul', 'ol', 'li', 'img', 'input', 'select'].includes(tag)
+    return ['div', 'a', 'p', 'span', 'button', 'ul', 'ol', 'li', 'img', 'input', 'select', 'h1'].includes(tag)
 }
 
 export function createElementVNode(vm, tag, data, ...children) {
