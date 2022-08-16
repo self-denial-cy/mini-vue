@@ -27,14 +27,18 @@ const weexFactoryPlugin = {
 
 const aliases = require('./alias')
 const resolve = p => {
-  const base = p.split('/')[0]
+  const base = p.split('/')[0] // ['web','entry-runtime-with-compiler.js']
   if (aliases[base]) {
+    // src/platforms/web/entry-runtime-with-compiler.js
     return path.resolve(aliases[base], p.slice(base.length + 1))
   } else {
     return path.resolve(__dirname, '../', p)
   }
 }
 
+// dev 开发版本 prod 生产版本
+// web-runtime 运行时，无法解析 template 参数 web-full 运行时+模板解析
+// cjs commonjs esm 支持 import export browser 浏览器中使用 umd 支持 global amd commonjs
 const builds = {
   // Runtime only (CommonJS). Used by bundlers e.g. Webpack & Browserify
   'web-runtime-cjs-dev': {
@@ -264,6 +268,7 @@ function genConfig (name) {
 }
 
 if (process.env.TARGET) {
+  // 指定了 TARGET 为 web-full-dev
   module.exports = genConfig(process.env.TARGET)
 } else {
   exports.getBuild = genConfig
