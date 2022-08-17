@@ -70,6 +70,8 @@ Watcher 目前有 渲染 Watcher、计算属性 Watcher、用户自定义 Watche
 
 
 > 一般在 mounted 中发送请求，虽然 created 比 mounted 执行时机早，但是钩子都是同步执行，请求是异步执行，在 mounted 中还可以获取到第一次渲染之后的 dom
+
+
 > 服务端渲染基本上也不会使用 created（服务端没有 dom 也没有 mounted）
 
 ## 7.`Vue.mixin`的使用场景和原理
