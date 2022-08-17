@@ -227,6 +227,7 @@ function genConfig (name) {
       alias(Object.assign({}, aliases, opts.alias))
     ].concat(opts.plugins || []),
     output: {
+      // sourcemap: true, // 生成 sourcemap
       file: opts.dest,
       format: opts.format,
       banner: opts.banner,

@@ -22,3 +22,8 @@ lifecycleMixin(Vue) // Vue.prototype._update Vue.prototype.$forceUpdate Vue.prot
 renderMixin(Vue) // Vue.prototype.$nextTick Vue.prototype._render
 
 export default Vue
+
+// 源码调试
+// 1.掌握了核心的流程，可以直接打开源码去看
+// 2.如果不知道流程，可以写一些测试用例（test 目录里已经有一些官方用例）
+// 3.或者自己写一些示例结合 sourcemap debugger 源码
