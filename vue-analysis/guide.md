@@ -1,6 +1,32 @@
 ## 1.`Vue2`响应式数据的理解
 
+目的：监控数据的修改和获取操作
+
+针对对象数据可以使用 `Object.defineProperty` 方法劫持属性（属性劫持）
+
+> 源码层面 initState -> initData -> observe -> new Observer -> defineReactive -> Object.defineProperty
+
+对象的所有属性的 get 和 set 都进行了重写，同时递归向下遍历属性，因此可能存在性能问题
+
+推荐：使用 Vue 时，data 的数据结构不要嵌套太深的层级（性能优化）；如果不要求数据响应式，就不要放在 data 中了；对响应式数据的取值赋值应避免连续多次；如果有些对象在 data 中但是不要求响应式可以考虑 `Object.freeze` 冻结对象
+
+```javascript
+let total = 0
+for (let i = 0; i < 100; i++){
+    total += i
+}
+this.total = total
+```
+
 ## 2.`Vue`中如何检测数组变化?
+
+Vue2 中监控数组变化并没有使用 `defineProperty` 方法，因为根据索引修改数组的情况不多（如果使用 `defineProperty` 方法会浪费大量性能）
+
+采用了重写数组变异方法（能够修改数组本身的方法）来实现（函数劫持）
+
+> 源码层面 initState -> initData -> observe -> new Observer -> 重写数组变异方法 | observeArray（对数组中每一项都 observe 一下）
+
+注意：根据索引修改数组或修改数组长度是无法监控的（arr[1] = 100 arr.length = 100）
 
 ## 3.`Vue`中如何进行依赖收集？
 
