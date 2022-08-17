@@ -42,9 +42,21 @@ Watcher 目前有 渲染 Watcher、计算属性 Watcher、用户自定义 Watche
 
 ## 4.如何理解`Vue`中模板编译原理
 
+目的：将 template 转换为 render 函数
+
+- 第一步：将 template 转换为 ast 语法树
+- 第二步：将 ast 语法树转换为 render 函数的字符串定义
+- 第三步：通过 with 和 new Function 生成 render 函数
+
+> render 函数返回的结果就是 虚拟DOM
+
 ## 5.`Vue`生命周期钩子是如何实现的
 
+内部维护了一组生命周期钩子 LIFECYCLE_HOOKS，并且为其定义了合并策略 mergeHook，后续依次通过 callHook 调用
+
 ## 6.`Vue`的生命周期方法有哪些？一般在哪一步发送请求及原因
+
+
 
 ## 7.`Vue.mixin`的使用场景和原理
 
