@@ -30,6 +30,16 @@ Vue2 中监控数组变化并没有使用 `defineProperty` 方法，因为根据
 
 ## 3.`Vue`中如何进行依赖收集？
 
+依赖收集（观察者模式）：被观察者指代的是数据（Dep），观察者指代的是 Watcher
+
+Dep 与 Watcher 是多对多的关系，视图渲染时，会触发 get 方法，Dep 和 Watcher 会互相收集好依赖关系；数据变更时，则会根据依赖关系触发对应的 Watcher 更新
+
+data 中的每一个对象或数组都有一个对应的 Observer 实例，该实例上有一个 Dep；对象的每一个 key 都有一个闭包空间，该空间里有一个 Dep；修改对象属性一般会通过后者 Dep 触发 Watcher 更新；调用数组变异方法修改数组一般会通过前者 Dep 触发 Watcher 更新
+
+Watcher 目前有 渲染 Watcher、计算属性 Watcher、用户自定义 Watcher
+
+![fow](./images/fow.png)
+
 ## 4.如何理解`Vue`中模板编译原理
 
 ## 5.`Vue`生命周期钩子是如何实现的
