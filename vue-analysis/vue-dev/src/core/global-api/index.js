@@ -29,7 +29,7 @@ export function initGlobalAPI (Vue: GlobalAPI) {
       )
     }
   }
-  Object.defineProperty(Vue, 'config', configDef)
+  Object.defineProperty(Vue, 'config', configDef) // 配置信息
 
   // exposed util methods.
   // NOTE: these are not considered part of the public API - avoid relying on
@@ -53,6 +53,7 @@ export function initGlobalAPI (Vue: GlobalAPI) {
 
   Vue.options = Object.create(null)
   ASSET_TYPES.forEach(type => {
+    // Vue.options.components Vue.options.directives Vue.options.filters
     Vue.options[type + 's'] = Object.create(null)
   })
 
@@ -60,10 +61,10 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   // components with in Weex's multi-instance scenarios.
   Vue.options._base = Vue
 
-  extend(Vue.options.components, builtInComponents)
+  extend(Vue.options.components, builtInComponents) // 增加了 keep-alive 组件
 
-  initUse(Vue)
-  initMixin(Vue)
-  initExtend(Vue)
-  initAssetRegisters(Vue)
+  initUse(Vue) // Vue.use
+  initMixin(Vue) // Vue.mixin
+  initExtend(Vue) // Vue.extend
+  initAssetRegisters(Vue) // Vue.component Vue.directive Vue.filter
 }
