@@ -56,7 +56,21 @@ Watcher 目前有 渲染 Watcher、计算属性 Watcher、用户自定义 Watche
 
 ## 6.`Vue`的生命周期方法有哪些？一般在哪一步发送请求及原因
 
+- beforeCreate 响应式数据尚未初始完毕，Vue3中就取缔了
+- created 响应式数据初始完毕（不涉及到 dom 渲染，这个 api 可以在服务端渲染中使用），Vue3 使用 setup 替代
+- beforeMount 在渲染 dom 之前，没有实际价值
+- mounted 可以获取到真实 dom $el
+- beforeUpdate 更新之前
+- updated 更新完毕之后
+- beforeDestroy 组件销毁之前，Watcher、子组件、事件监听还未销毁
+- destroyed 组件销毁之后，只是 Vue 实例被销毁了（也有可能只是失活，暂时还未去看相关源码），相关的 dom 并未被移除。。。
+- activated
+- deactivated
+- errorCaptured 捕获错误
 
+
+> 一般在 mounted 中发送请求，虽然 created 比 mounted 执行时机早，但是钩子都是同步执行，请求是异步执行，在 mounted 中还可以获取到第一次渲染之后的 dom
+> 服务端渲染基本上也不会使用 created（服务端没有 dom 也没有 mounted）
 
 ## 7.`Vue.mixin`的使用场景和原理
 
