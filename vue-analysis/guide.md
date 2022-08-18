@@ -182,7 +182,11 @@ v-if 控制是否渲染，v-show 控制的是样式（display:none）
 
 ## 23.v-if，v-model，v-for的实现原理
 
-
+- v-if 会被编译成三元表达式
+- v-for 会被编译成 _l 函数（renderList 函数），针对数组、字符串、数字、对象（有 Symbol.iterator 或无）不同的情况去遍历，最终返回 VNode 列表
+- v-model 在表单元素上可以实现双向绑定 在组件上就不一样了
+  - v-model 在不同的表单元素上会编译出不同的结果，就 input[type=text] 来说会被编译成 value + input + 指令处理，value 和 input 实现双向绑定且阻止中文的触发，指令则会处理中文输入完毕后，手动触发更新
+  - v-model 在组件上会编译出一个 model 对象，组件创建虚拟 dom 时会有这个对象；会看一下里面是否有自定义的 prop 和 event，如果没有则会被解析成 value + input 的语法糖
 
 ## 24.Vue中slot是如何实现的？什么时候使用它？
 
