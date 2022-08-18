@@ -122,7 +122,67 @@ this.$nextTick(()=>{
 
 ## 22.v-if和v-for哪个优先级更高？
 
+```html
+<div>
+  <div v-for="i in 10" v-if="flag"></div>
+</div>
+```
+
+```javascript
+function render() {
+  with(this) {
+    return _c('div', _l((10), function (i) {
+      return (flag) ? _c('div') : _e()
+    }), 0)
+  }
+}
+```
+
+> v-for 的优先级更高，在编译的时候，会将 v-for 转换为 _l 函数，v-if 转换为三元表达式；
+> 
+> 源码层面：genFor 在 genIf 之前执行
+> 
+> v-for 与 v-if 不推荐放在一起使用，可以通过加一层 template 或者使用 computed 过滤数据源优化
+
+
+扩展：v-if 与 v-show 的区别？
+
+```javascript
+function render() {
+  with(this) {
+    return _c('div', [(flag) ? _c('div') : _e()])
+  }
+}
+```
+
+```javascript
+function render() {
+  with(this) {
+    return _c('div', [_c('div', {
+      directives: [{
+        name: "show",
+        rawName: "v-show",
+        value: (flag),
+        expression: "flag"
+      }]
+    })])
+  }
+}
+```
+
+> v-if 会编译成一个三元表达式，v-show 会编译成一个指令
+
+v-if 控制是否渲染，v-show 控制的是样式（display:none）
+
+> v-show 会记录元素初始的 display 属性值，表现出来的结果就是在初始 display 值和 none 之间来回切换，就算应用在 span 元素上也不会使其突然变成块元素或内联块元素等；
+> 
+> 为什么不控制元素的 visibility 属性：元素仍然会占位，虽然不会响应事件
+> 
+> 为什么不控制元素的 opacity 属性：元素仍然会占位，且还会响应事件
+
 ## 23.v-if，v-model，v-for的实现原理
+
+
 
 ## 24.Vue中slot是如何实现的？什么时候使用它？
 
