@@ -84,14 +84,14 @@ nextTick 内部采用了异步任务进行了包装（多个 nextTick 调用会�
 
 异步任务并未直接采用某个 api，而是使用了优雅降级的方式：Promise（不兼容 ie） MutationObserver（h5 api） setImmediate（ie 独有） setTimeout
 
-> 应用场景：一般是为了获取更新后的最新 dom，因为 Watcher 更新也是缓存到异步队列中，必须等该异步队列执行完毕之后，才能获取到最新渲染结果；nextTick 异步队列一般运行在 Watcher 异步队列之后，所以才能获取到最新渲染结果
+> 应用场景：一般是为了获取更新后的最新 dom，因为 Watcher 更新也是缓存到异步队列中，必须等 Watcher 更新之后，才能获取到最新渲染结果；nextTick 一般写在 Watcher 更新之后，所以才能获取到最新渲染结果
 
 ```javascript
-this.name = 'hello world' // 触发 set -> dep.notify -> watcher.update -> 缓存到 Watcher 异步执行队列中 
+this.name = 'hello world' // 触发 set -> dep.notify -> watcher.update -> 缓存到异步队列中
 
 this.$nextTick(()=>{
     console.log('获取到最新渲染结果')
-}) // 将回调缓存到 nextTick 异步执行队列中
+}) // 将回调缓存到异步执行队列中
 
 // 同步任务执行完后，再按顺序执行异步任务，这样就可以在 nextTick 的回调中获取到最新渲染结果
 ```

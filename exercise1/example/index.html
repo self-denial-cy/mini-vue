@@ -62,6 +62,10 @@
         }
     })
 
+    vm.$nextTick(() => {
+        console.log(document.getElementById('app').innerHTML)
+    })
+
     vm.count = 1
     vm.count = 2
     vm.count = 3
@@ -71,7 +75,7 @@
     // console.log(document.getElementById('app').innerHTML)
 
     vm.$nextTick(() => {
-        // console.log(document.getElementById('app').innerHTML)
+        console.log(document.getElementById('app').innerHTML)
     })
 
     setTimeout(() => {
