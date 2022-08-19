@@ -61,6 +61,7 @@ function add (
     const attachedTimestamp = currentFlushTimestamp
     const original = handler
     handler = original._wrapper = function (e) {
+      debugger
       if (
         // no bubbling, should always fire.
         // this is just a safety net in case event.timeStamp is unreliable in

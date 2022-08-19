@@ -192,9 +192,32 @@ v-if 控制是否渲染，v-show 控制的是样式（display:none）
 
 ## 25.Vue.use是干什么的？原理是什么？
 
+Vue.use 用来安装插件，将 Vue 的构造函数传递到插件中，让所有的插件依赖同一版本的 Vue
+
+插件本身暴露一个函数，那就直接将 Vue 传递进去；插件本身暴露一个对象，那就将 Vue 传递给该对象的 install 方法
+
 ## 26.Vue事件修饰符有哪些？其实现原理是什么？
 
 ## 27.Vue中.sync修饰符的作用，用法及实现原理
+
+这个修饰符用于实现状态同步的，实现原理与 v-model 类似
+
+```javascript
+function render() {
+  with(this) {
+    return _c('div', [_c('A', {
+      attrs: {
+        "text": title
+      },
+      on: {
+        "update:text": function ($event) {
+          title = $event
+        }
+      }
+    })], 1)
+  }
+}
+```
 
 ## 28.如何理解自定义指令
 
