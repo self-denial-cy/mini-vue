@@ -224,3 +224,13 @@ function render() {
 ## 29.keep-alive平时在哪里使用？原理是？
 
 ## 30.组件中写name选项有哪些好处及作用？
+
+- 可以实现递归组件
+  ```javascript
+  // enable recursive self-lookup
+  if (name) {
+    Sub.options.components[name] = Sub
+  }
+  ```
+- 标识作用，可以通过 name 找到对应的组件
+- 配和 devtool 工具具名化组件
