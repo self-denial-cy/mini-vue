@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+
+<body>
+<div id="app">
+  <slot-component>
+    <span>默认插槽 by {{msg}}</span>
+  </slot-component>
+</div>
+</body>
+
+<script src="../../dist/vue.js"></script>
+<script>
+  Vue.component('slot-component', {
+    template: `<h4><slot></slot></h4>`,
+    data() {
+      return {
+        msg: 'inner'
+      }
+    }
+  })
+
+  new Vue({
+    el: '#app',
+    data: {
+      msg: 'outer'
+    }
+  })
+
+  // 默认插槽渲染时数据是来自父组件的
+</script>
+
+</html>

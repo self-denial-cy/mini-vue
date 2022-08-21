@@ -17,14 +17,14 @@ export function initAssetRegisters (Vue: GlobalAPI) {
       } else {
         /* istanbul ignore if */
         if (process.env.NODE_ENV !== 'production' && type === 'component') {
-          validateComponentName(id)
+          validateComponentName(id) // 校验组件名是否合法
         }
-        if (type === 'component' && isPlainObject(definition)) {
+        if (type === 'component' && isPlainObject(definition)) { // 校验 definition 是否是引用类型
           definition.name = definition.name || id
           definition = this.options._base.extend(definition)
         }
         if (type === 'directive' && typeof definition === 'function') {
-          definition = { bind: definition, update: definition }
+          definition = {bind: definition, update: definition}
         }
         this.options[type + 's'][id] = definition
         return definition

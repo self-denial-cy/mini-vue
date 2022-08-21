@@ -54,6 +54,7 @@ export function initMixin (Vue: Class<Component>) {
     initRender(vm) // $slots $scopedSlots
     callHook(vm, 'beforeCreate')
     initInjections(vm) // resolve injections before data/props inject
+    debugger
     initState(vm) // 响应式数据处理
     initProvide(vm) // resolve provide after data/props provide
     callHook(vm, 'created')
