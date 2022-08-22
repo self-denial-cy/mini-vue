@@ -35,6 +35,7 @@ export function initMixin (Vue: Class<Component>) {
       // internal component options needs special treatment.
       initInternalComponent(vm, options)
     } else {
+      // 合并配置
       vm.$options = mergeOptions(
         resolveConstructorOptions(vm.constructor),
         options || {},
@@ -54,7 +55,6 @@ export function initMixin (Vue: Class<Component>) {
     initRender(vm) // $slots $scopedSlots
     callHook(vm, 'beforeCreate')
     initInjections(vm) // resolve injections before data/props inject
-    debugger
     initState(vm) // 响应式数据处理
     initProvide(vm) // resolve provide after data/props provide
     callHook(vm, 'created')
@@ -65,7 +65,7 @@ export function initMixin (Vue: Class<Component>) {
       mark(endTag)
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
-
+    debugger
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }
@@ -93,6 +93,7 @@ export function initInternalComponent (vm: Component, options: InternalComponent
 
 export function resolveConstructorOptions (Ctor: Class<Component>) {
   let options = Ctor.options
+  // 如果是通过 extend 得到的 Sub
   if (Ctor.super) {
     const superOptions = resolveConstructorOptions(Ctor.super)
     const cachedSuperOptions = Ctor.superOptions

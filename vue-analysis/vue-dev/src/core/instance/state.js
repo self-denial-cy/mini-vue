@@ -144,11 +144,12 @@ function initData (vm: Component) {
         `Use prop default value instead.`,
         vm
       )
-    } else if (!isReserved(key)) {
+    } else if (!isReserved(key)) { // 判断是否是 _ $ 开头，判断是否是私有属性
+      // 将 _data 中的属性代理到 vm 实例上
       proxy(vm, `_data`, key)
     }
   }
-  // observe data
+  // observe data 响应式处理 data
   observe(data, true /* asRootData */)
 }
 
@@ -339,8 +340,8 @@ export function stateMixin (Vue: Class<Component>) {
       warn(`$props is readonly.`, this)
     }
   }
-  Object.defineProperty(Vue.prototype, '$data', dataDef)
-  Object.defineProperty(Vue.prototype, '$props', propsDef)
+  Object.defineProperty(Vue.prototype, '$data', dataDef) // $data 指向 _data
+  Object.defineProperty(Vue.prototype, '$props', propsDef) // $props 指向 _props
 
   Vue.prototype.$set = set
   Vue.prototype.$delete = del

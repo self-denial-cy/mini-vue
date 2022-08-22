@@ -12,6 +12,7 @@ export const unicodeRegExp = /a-zA-Z\u00B7\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037
  */
 export function isReserved (str: string): boolean {
   const c = (str + '').charCodeAt(0)
+  // 判断是否是 _ $ 开头，判断是否是私有属性
   return c === 0x24 || c === 0x5F
 }
 
