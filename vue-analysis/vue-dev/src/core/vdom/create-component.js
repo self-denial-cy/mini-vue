@@ -44,12 +44,12 @@ const componentVNodeHooks = {
       const mountedNode: any = vnode // work around flow
       componentVNodeHooks.prepatch(mountedNode, mountedNode)
     } else {
+      debugger
       // 创建组件实例
       const child = vnode.componentInstance = createComponentInstanceForVnode(
         vnode,
         activeInstance
       )
-      debugger
       child.$mount(hydrating ? vnode.elm : undefined, hydrating)
     }
   },
@@ -214,12 +214,12 @@ export function createComponentInstanceForVnode (
   parent: any
 ): Component {
   const options: InternalComponentOptions = {
-    _isComponent: true,
+    _isComponent: true, // 在 init 中标识自己是组件
     _parentVnode: vnode,
     parent
   }
   // check inline-template render functions
-  const inlineTemplate = vnode.data.inlineTemplate
+  const inlineTemplate = vnode.data.inlineTemplate // 内联模板
   if (isDef(inlineTemplate)) {
     options.render = inlineTemplate.render
     options.staticRenderFns = inlineTemplate.staticRenderFns

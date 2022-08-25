@@ -73,19 +73,19 @@ export function initMixin (Vue: Class<Component>) {
 }
 
 export function initInternalComponent (vm: Component, options: InternalComponentOptions) {
-  const opts = vm.$options = Object.create(vm.constructor.options)
+  const opts = vm.$options = Object.create(vm.constructor.options) // 基于 Sub.options 为原型创建一个配置对象
   // doing this because it's faster than dynamic enumeration.
   const parentVnode = options._parentVnode
-  opts.parent = options.parent
-  opts._parentVnode = parentVnode
+  opts.parent = options.parent // 父级 Vue 实例
+  opts._parentVnode = parentVnode // 父级虚拟 dom
 
   const vnodeComponentOptions = parentVnode.componentOptions
-  opts.propsData = vnodeComponentOptions.propsData
-  opts._parentListeners = vnodeComponentOptions.listeners
-  opts._renderChildren = vnodeComponentOptions.children
-  opts._componentTag = vnodeComponentOptions.tag
+  opts.propsData = vnodeComponentOptions.propsData // 组件的 props
+  opts._parentListeners = vnodeComponentOptions.listeners // 组件的 listeners
+  opts._renderChildren = vnodeComponentOptions.children // 组件的 children
+  opts._componentTag = vnodeComponentOptions.tag // 组件标签名
 
-  if (options.render) {
+  if (options.render) { // 内联模板
     opts.render = options.render
     opts.staticRenderFns = options.staticRenderFns
   }

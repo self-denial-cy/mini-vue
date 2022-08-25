@@ -36,7 +36,7 @@ export function resolveSlots (
       (slots.default || (slots.default = [])).push(child)
     }
   }
-  // ignore slots that contains only whitespace
+  // ignore slots that contains only whitespace 忽略没有内容的插槽
   for (const name in slots) {
     if (slots[name].every(isWhitespace)) {
       delete slots[name]

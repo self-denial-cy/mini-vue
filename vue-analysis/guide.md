@@ -194,7 +194,17 @@ v-if 控制是否渲染，v-show 控制的是样式（display:none）
 
 插槽类型：普通插槽、具名插槽、作用域插槽
 
-
+- 普通插槽（渲染作用域在父组件中）
+  - 解析组件时，将组件的 children 放到 componentOptions 上作为虚拟节点的属性
+  - 将 children 取出来放在组件的 vm.$options._renderChildren 上
+  - 做出一个映射表放到 vm.$slots 上
+  - 合并到 vm.$scopeSlots 上 vm.$scopeSlots={ a: fn, b: fn, default: fn }
+  - 渲染组件时调用 _t 方法去 vm.$scopeSlots 中找到对应的函数渲染内容
+- 具名插槽（与普通插槽类似，只是增加了 name）
+- 作用域插槽（渲染作用域在子组件中）
+  - 渲染插槽选择的作用域是子组件的，作用域插槽渲染的时候不会作为 children，而是将其生成了一个属性 scopedSlots
+  - 制作映射关系 $scopedSlots={default:fn:function({msg}){return _c('div',{},[_v(_s(msg))])}}}
+  - 渲染组件时通过 name 找到对应的函数，将数据传入到函数中渲染虚拟节点，然后替换 _t('default')
 
 ## 25.Vue.use是干什么的？原理是什么？
 
