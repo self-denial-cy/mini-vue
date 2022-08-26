@@ -12,7 +12,7 @@
 
 ```javascript
 let total = 0
-for (let i = 0; i < 100; i++){
+for (let i = 0; i < 100; i++) {
     total += i
 }
 this.total = total
@@ -68,7 +68,6 @@ Watcher 目前有 渲染 Watcher、计算属性 Watcher、用户自定义 Watche
 - deactivated
 - errorCaptured 捕获错误
 
-
 > 一般在 mounted 中发送请求，虽然 created 比 mounted 执行时机早，但是钩子都是同步执行，请求是异步执行，在 mounted 中还可以获取到第一次渲染之后的 dom
 
 
@@ -89,7 +88,7 @@ nextTick 内部采用了异步任务进行了包装（多个 nextTick 调用会�
 ```javascript
 this.name = 'hello world' // 触发 set -> dep.notify -> watcher.update -> 缓存到异步队列中
 
-this.$nextTick(()=>{
+this.$nextTick(() => {
     console.log('获取到最新渲染结果')
 }) // 将回调缓存到异步执行队列中
 
@@ -123,25 +122,26 @@ this.$nextTick(()=>{
 ## 22.v-if和v-for哪个优先级更高？
 
 ```html
+
 <div>
-  <div v-for="i in 10" v-if="flag"></div>
+    <div v-for="i in 10" v-if="flag"></div>
 </div>
 ```
 
 ```javascript
 function render() {
-  with(this) {
-    return _c('div', _l((10), function (i) {
-      return (flag) ? _c('div') : _e()
-    }), 0)
-  }
+    with (this) {
+        return _c('div', _l((10), function (i) {
+            return (flag) ? _c('div') : _e()
+        }), 0)
+    }
 }
 ```
 
 > v-for 的优先级更高，在编译的时候，会将 v-for 转换为 _l 函数，v-if 转换为三元表达式；
-> 
+>
 > 源码层面：genFor 在 genIf 之前执行
-> 
+>
 > v-for 与 v-if 不推荐放在一起使用，可以通过加一层 template 或者使用 computed 过滤数据源优化
 
 
@@ -149,24 +149,24 @@ function render() {
 
 ```javascript
 function render() {
-  with(this) {
-    return _c('div', [(flag) ? _c('div') : _e()])
-  }
+    with (this) {
+        return _c('div', [(flag) ? _c('div') : _e()])
+    }
 }
 ```
 
 ```javascript
 function render() {
-  with(this) {
-    return _c('div', [_c('div', {
-      directives: [{
-        name: "show",
-        rawName: "v-show",
-        value: (flag),
-        expression: "flag"
-      }]
-    })])
-  }
+    with (this) {
+        return _c('div', [_c('div', {
+            directives: [{
+                name: "show",
+                rawName: "v-show",
+                value: (flag),
+                expression: "flag"
+            }]
+        })])
+    }
 }
 ```
 
@@ -175,9 +175,9 @@ function render() {
 v-if 控制是否渲染，v-show 控制的是样式（display:none）
 
 > v-show 会记录元素初始的 display 属性值，表现出来的结果就是在初始 display 值和 none 之间来回切换，就算应用在 span 元素上也不会使其突然变成块元素或内联块元素等；
-> 
+>
 > 为什么不控制元素的 visibility 属性：元素仍然会占位，虽然不会响应事件
-> 
+>
 > 为什么不控制元素的 opacity 属性：元素仍然会占位，且还会响应事件
 
 ## 23.v-if，v-model，v-for的实现原理
@@ -185,8 +185,8 @@ v-if 控制是否渲染，v-show 控制的是样式（display:none）
 - v-if 会被编译成三元表达式
 - v-for 会被编译成 _l 函数（renderList 函数），针对数组、字符串、数字、对象（有 Symbol.iterator 或无）不同的情况去遍历，最终返回 VNode 列表
 - v-model 在表单元素上可以实现双向绑定 在组件上就不一样了
-  - v-model 在不同的表单元素上会编译出不同的结果，就 input[type=text] 来说会被编译成 value + input + 指令处理，value 和 input 实现双向绑定且阻止中文的触发，指令则会处理中文输入完毕后，手动触发更新
-  - v-model 在组件上会编译出一个 model 对象，组件创建虚拟 dom 时会有这个对象；会看一下里面是否有自定义的 prop 和 event，如果没有则会被解析成 value + input 的语法糖
+    - v-model 在不同的表单元素上会编译出不同的结果，就 input[type=text] 来说会被编译成 value + input + 指令处理，value 和 input 实现双向绑定且阻止中文的触发，指令则会处理中文输入完毕后，手动触发更新
+    - v-model 在组件上会编译出一个 model 对象，组件创建虚拟 dom 时会有这个对象；会看一下里面是否有自定义的 prop 和 event，如果没有则会被解析成 value + input 的语法糖
 
 ## 24.Vue中slot是如何实现的？什么时候使用它？
 
@@ -195,16 +195,16 @@ v-if 控制是否渲染，v-show 控制的是样式（display:none）
 插槽类型：普通插槽、具名插槽、作用域插槽
 
 - 普通插槽（渲染作用域在父组件中）
-  - 解析组件时，将组件的 children 放到 componentOptions 上作为虚拟节点的属性
-  - 将 children 取出来放在组件的 vm.$options._renderChildren 上
-  - 做出一个映射表放到 vm.$slots 上
-  - 合并到 vm.$scopeSlots 上 vm.$scopeSlots={ a: fn, b: fn, default: fn }
-  - 渲染组件时调用 _t 方法去 vm.$scopeSlots 中找到对应的函数渲染内容
+    - 解析组件时，将组件的 children 放到 componentOptions 上作为虚拟节点的属性
+    - 将 children 取出来放在组件的 vm.$options._renderChildren 上
+    - 做出一个映射表放到 vm.$slots 上
+    - 合并到 vm.$scopeSlots 上 vm.$scopeSlots={ a: fn, b: fn, default: fn }
+    - 渲染组件时调用 _t 方法去 vm.$scopeSlots 中找到对应的函数渲染内容
 - 具名插槽（与普通插槽类似，只是增加了 name）
 - 作用域插槽（渲染作用域在子组件中）
-  - 渲染插槽选择的作用域是子组件的，作用域插槽渲染的时候不会作为 children，而是将其生成了一个属性 scopedSlots
-  - 制作映射关系 $scopedSlots={default:fn:function({msg}){return _c('div',{},[_v(_s(msg))])}}}
-  - 渲染组件时通过 name 找到对应的函数，将数据传入到函数中渲染虚拟节点，然后替换 _t('default')
+    - 渲染插槽选择的作用域是子组件的，作用域插槽渲染的时候不会作为 children，而是将其生成了一个属性 scopedSlots
+    - 制作映射关系 $scopedSlots={default:fn:function({msg}){return _c('div',{},[_v(_s(msg))])}}}
+    - 渲染组件时通过 name 找到对应的函数，将数据传入到函数中渲染虚拟节点，然后替换 _t('default')
 
 ## 25.Vue.use是干什么的？原理是什么？
 
@@ -220,24 +220,28 @@ Vue.use 用来安装插件，将 Vue 的构造函数传递到插件中，让所�
 
 ```javascript
 function render() {
-  with(this) {
-    return _c('div', [_c('A', {
-      attrs: {
-        "text": title
-      },
-      on: {
-        "update:text": function ($event) {
-          title = $event
-        }
-      }
-    })], 1)
-  }
+    with (this) {
+        return _c('div', [_c('A', {
+            attrs: {
+                "text": title
+            },
+            on: {
+                "update:text": function ($event) {
+                    title = $event
+                }
+            }
+        })], 1)
+    }
 }
 ```
 
 ## 28.如何理解自定义指令
 
 ## 29.keep-alive平时在哪里使用？原理是？
+
+keep-alive 一般搭配 route-view 和 component:is 使用
+
+原理是缓存加载过的组件实例，内部采用 LRU 算法，下次组件切换加载时，此时会找到对应缓存的节点来进行初始化，但是会使用缓存的组件实例上的 $el；更新和销毁会分别触发 activated 和 deactivated 钩子
 
 ## 30.组件中写name选项有哪些好处及作用？
 

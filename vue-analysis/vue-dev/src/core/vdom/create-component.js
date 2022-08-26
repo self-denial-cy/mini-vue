@@ -35,6 +35,7 @@ import {
 // inline hooks to be invoked on component VNodes during patch
 const componentVNodeHooks = {
   init (vnode: VNodeWithData, hydrating: boolean): ?boolean {
+    // keep-alive 中的组件被缓存了
     if (
       vnode.componentInstance &&
       !vnode.componentInstance._isDestroyed &&
@@ -81,6 +82,7 @@ const componentVNodeHooks = {
         // be processed after the whole patch process ended.
         queueActivatedComponent(componentInstance)
       } else {
+        // keep-alive 插入到页面时会触发 activated 钩子
         activateChildComponent(componentInstance, true /* direct */)
       }
     }
@@ -92,6 +94,7 @@ const componentVNodeHooks = {
       if (!vnode.data.keepAlive) {
         componentInstance.$destroy()
       } else {
+        // keep-alive 销毁时会触发 deactivated 钩子
         deactivateChildComponent(componentInstance, true /* direct */)
       }
     }

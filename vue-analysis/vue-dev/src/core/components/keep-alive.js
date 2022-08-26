@@ -58,12 +58,12 @@ const patternTypes: Array<Function> = [String, RegExp, Array]
 
 export default {
   name: 'keep-alive',
-  abstract: true,
+  abstract: true, // 抽象组件，不会被记录到 $parent $children
 
   props: {
-    include: patternTypes,
-    exclude: patternTypes,
-    max: [String, Number]
+    include: patternTypes, // 可以缓存哪些组件 ['a','b']
+    exclude: patternTypes, // 可以排除哪些组件 ['a','b']
+    max: [String, Number] // 最大缓存个数
   },
 
   methods: {
@@ -74,7 +74,7 @@ export default {
         cache[keyToCache] = {
           name: getComponentName(componentOptions),
           tag,
-          componentInstance,
+          componentInstance, // 组件实例渲染之后会有 $el，下次可以复用
         }
         keys.push(keyToCache)
         // prune oldest entry
@@ -87,8 +87,8 @@ export default {
   },
 
   created () {
-    this.cache = Object.create(null)
-    this.keys = []
+    this.cache = Object.create(null) // 缓存区
+    this.keys = [] // 缓存组件的名字
   },
 
   destroyed () {
@@ -112,13 +112,14 @@ export default {
   },
 
   render () {
-    const slot = this.$slots.default
-    const vnode: VNode = getFirstComponentChild(slot)
-    const componentOptions: ?VNodeComponentOptions = vnode && vnode.componentOptions
+    const slot = this.$slots.default // 取默认插槽
+    const vnode: VNode = getFirstComponentChild(slot) // 获取插槽中的第一个虚拟节点
+    const componentOptions: ?VNodeComponentOptions = vnode && vnode.componentOptions // { Ctor, propsData, listeners, tag, children }
     if (componentOptions) {
       // check pattern
-      const name: ?string = getComponentName(componentOptions)
+      const name: ?string = getComponentName(componentOptions) // 获取组件名
       const { include, exclude } = this
+      // 不复用的逻辑
       if (
         // not included
         (include && (!name || !matches(include, name))) ||
@@ -133,20 +134,21 @@ export default {
         // same constructor may get registered as different local components
         // so cid alone is not enough (#3269)
         ? componentOptions.Ctor.cid + (componentOptions.tag ? `::${componentOptions.tag}` : '')
-        : vnode.key
+        : vnode.key // 生成一个唯一 key
       if (cache[key]) {
-        vnode.componentInstance = cache[key].componentInstance
-        // make current key freshest
+        vnode.componentInstance = cache[key].componentInstance // 获取缓存的组件实例
+        // make current key freshest LRU 策略
         remove(keys, key)
         keys.push(key)
       } else {
         // delay setting the cache until update
-        this.vnodeToCache = vnode
-        this.keyToCache = key
+        this.vnodeToCache = vnode // 缓存当前的 vnode
+        this.keyToCache = key // key 也需要被缓存
       }
 
-      vnode.data.keepAlive = true
+      vnode.data.keepAlive = true // 给当前 vnode 增加一个标识
     }
+    // 虚拟节点存在 componentInstance 和 data.keepAlive 时说明是被缓存的
     return vnode || (slot && slot[0])
   }
 }
