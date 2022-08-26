@@ -75,7 +75,15 @@ Watcher 目前有 渲染 Watcher、计算属性 Watcher、用户自定义 Watche
 
 ## 7.`Vue.mixin`的使用场景和原理
 
+通过 Vue.mixin 可以实现逻辑的复用，问题在于数据来源不明确且声明时可能会导致命名冲突；可以实现高阶组件
+
+Vue3 中引入 compositionAPI 以解决复用问题
+
+mixin 的核心就是 mergeOptions （内部采用了策略模式进行合并），包括全局 mixin 和局部 mixin；针对不同的属性有不同的合并策略
+
 ## 8.`Vue`组件`data`为什么必须是个函数？
+
+不管是直接使用 Vue 或者是 Vue.extend 得到的 Sub 来创建组件实例，都会通过 mergeOptions 将所有的配置合并到 $options 上；mergeOptions 中对于 data 属性的合并策略会出现这么一种情况：多次创建组件实例时，可能多个组件实例会共享同一个 data 数据源，互相会影响；期望每个组件都有一份自己独立的数据源，可以通过调用 data 函数返回一份数据自己使用
 
 ## 9.`nextTick`在哪里使用？原理是?
 
