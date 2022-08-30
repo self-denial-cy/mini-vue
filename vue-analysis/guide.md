@@ -145,19 +145,68 @@ diff 算法的特点就是平级比较，内部采用了双指针方式对常见
 
 ## 15.请说明Vue中key的作用和原理，谈谈你对它的理解
 
+在 isSameVnode 方法中会根据 key 来判断新老两个节点是否是同一个节点，key 不相同说明不是同一个节点（key 在动态列表中不要使用索引，会有 bug）
 
+使用 key 时要尽量保证 key 的唯一性（优化 diff 算法）
 
 ## 16.谈一谈对Vue组件化的理解
 
+组件的优点：组件的复用可以根据数据渲染对应的组件，把组件相关的内容放在一起（方便复用），可以更合理的规划组件，更新时可以实现组件级更新
+
+组件的特性：属性、事件、插槽
+
+> Vue 中怎样处理组件
+>
+> Vue.extend 根据用户传入的对象生成一个组件的构造函数
+>
+> 根据组件生成对应的虚拟节点 data:{hook:init}
+>
+> 组件初始化将虚拟节点转化为真实节点，最后挂载
+
 ## 17.`Vue`的组件渲染流程
+
+- vm.$options.components['my']={my:模板}
+- 创造组件的虚拟节点 createComponent {tag:'my',data:{hook:{init}},componentOptions:{Ctor:Vue.extend({my:模板})}}
+- 创造真实节点 createComponent init -> new 组件().$mount() -> vm.componentInstance
+- vm.$el 插入到父元素中
 
 ## 18.`Vue`组件更新流程
 
+- 组件更新会触发 prepatch 方法，会复用组件，并且比较组件的属性、事件、插槽
+- 父组件给子组件传递的属性（props）是响应式的，在模板中使用会进行依赖收集（props 与 子组件 Watcher）
+- 父组件更新属性会重新给 props 赋值，赋值完成后会触发子组件 Watcher 更新
+
 ## 19.`Vue`中异步组件原理
+
+异步组件默认不会调用 Vue.extend 方法，所有 Ctor 上没有 cid 属性，没有 cid 属性的就是异步组件
+
+异步组件会先渲染一个占位符组件，但是如果有 loading 会先渲染 loading，第一轮就结束了
+
+如果用户调用了 resolve，会将结果赋值到 factory.resolved 上，强制重新渲染
+
+重新渲染时再次进入 resolveAsyncComponent 中，会直接拿到 factory.resolved 结果来渲染
 
 ## 20.函数组件的优势及原理
 
+React 中也区分两种组件：一种叫类组件，一种叫函数式组件
+
+Vue.extend 得到的 Sub 就是类组件，有 this
+
+函数式组件没有类就没有 this，也没有所谓的状态，没有生命周期，好处就是性能好，不需要创建 Watcher
+
+函数式组件就是调用 render 拿到返回结果来渲染，所以性能好
+
 ## 21.Vue组件间传值的方式及之间区别
+
+- props 父组件传递数据给子组件，原理就是把解析后的 props，验证后挂载到 vm._props（这个对象上的属性都是通过 defineReactive 定义的，都是响应式的），组件渲染过程中会去 vm 上取值（_props 上的属性会被代理到 vm 上）
+- emit 子组件触发事件，原理就是创建子组件虚拟节点时将所有的事件绑定到了 $listeners，通过 $on 绑定事件，通过 $emit 触发事件（发布订阅模式）
+- event Bus 原理就是发布订阅模式 $bus = new Vue()
+- $parent $children 原理就是在创建子组件时，会将父组件实例传入，在组件本身初始化过程中会构建组件间的父子关系 $parent 获取父组件的实例 $children 获取所有的子组件的实例
+- ref 可以获取 dom 元素和组件的实例 
+- provide inject 在父组件中暴露属性，在后代组件中注入属性（后代组件通过组件的父子关系递归向上查找）
+- $attrs $listeners 传入子组件的所有属性（不包括 props）和所有事件
+- Vue.observable 可以创建一个全局的对象用于通信（用的少）
+- Vuex
 
 ## 22.v-if和v-for哪个优先级更高？
 
