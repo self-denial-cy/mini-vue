@@ -352,4 +352,4 @@ keep-alive 一般搭配 route-view 和 component:is 使用
   }
   ```
 - 标识作用，可以通过 name 找到对应的组件
-- 配和 devtool 工具具名化组件
+- 配合 devtool 工具具名化组件
