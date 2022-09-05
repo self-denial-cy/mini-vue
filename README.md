@@ -21,4 +21,6 @@ npm run dev
 >
 > example 目录中的文件可以通过 vscode 的 live server 插件或 webstorm 自带的 Web 浏览器预览功能运行
 
-## vue-analysis
+## [vue-analysis](https://github.com/self-denial-cy/mini-vue-2/tree/main/vue-analysis)
+
+git clone vue@2.6.14 版本到本地 debugger 源码，理解 vue 内部运行机制
