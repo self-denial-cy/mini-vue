@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0",
+  "scripts": {
+    "commitmsg": "validate-commit-msg",
+    "preversion": "git pull --tags -f",
+    "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
+    "postversion": "git push && git push origin --tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/self-denial-cy/mini-vue-2.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/self-denial-cy/mini-vue-2/issues"
+  },
+  "homepage": "https://github.com/self-denial-cy/mini-vue-2#readme",
+  "devDependencies": {
+    "conventional-changelog-cli": "^1.2.0",
+    "husky": "^0.13.1",
+    "validate-commit-msg": "^2.11.1"
+  }
+}
