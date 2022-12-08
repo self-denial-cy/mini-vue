@@ -17,7 +17,7 @@ module.exports = [
     input: path.join(__dirname, './src/index.js'),
     output: {
       name: 'Vue',
-      file: path.join(__dirname, pkg.browser),
+      file: isProd ? path.join(__dirname, pkg.browser) : path.join(__dirname, path.join('./examples', pkg.browser)),
       format: 'iife',
       sourcemap: !isProd
     },
@@ -61,7 +61,7 @@ module.exports = [
   {
     input: path.join(__dirname, './src/index.js'),
     output: {
-      file: path.join(__dirname, pkg.module),
+      file: isProd ? path.join(__dirname, pkg.module) : path.join(__dirname, path.join('./examples', pkg.module)),
       format: 'es',
       sourcemap: !isProd
     },
