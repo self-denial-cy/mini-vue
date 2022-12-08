@@ -1,0 +1,6 @@
+// 配置使得 @babel/eslint-parser 能够解析高级语法
+{
+  "presets": [
+    "@babel/preset-env"
+  ]
+}

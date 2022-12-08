@@ -7,7 +7,8 @@
 ### 安装
 
 ```shell
-npm i
+# 因为 rollup-plugin-sizes 很久不更新，peer 需要 rollup@"^2.0.0"，但是项目中使用的 rollup@"^3.4.0"，但是不影响使用
+npm i --legacy-peer-deps
 ```
 
 ### 运行
@@ -16,10 +17,6 @@ npm i
 npm run dev
 ```
 
-> 已经开启了 sourcemap，进入 example 目录可以根据现有案例或自写案例 debugger 源码
+> 已经开启了 sourcemap，进入 examples 目录可以根据现有案例或自写案例 debugger 源码
 >
-> example 目录中的文件可以通过 vscode 的 live server 插件或 webstorm 自带的 Web 浏览器预览功能运行
-
-## [vue-analysis](./vue-analysis)
-
-git clone vue@2.6.14 版本到本地 debugger 源码，理解 vue 内部运行机制
+> examples 目录中的案例可以通过 vscode 的 live server 插件运行
