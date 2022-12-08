@@ -7,6 +7,7 @@ const clear = require('rollup-plugin-clear');
 const progress = require('rollup-plugin-progress');
 const sizes = require('rollup-plugin-sizes');
 const filesize = require('rollup-plugin-filesize');
+const eslint = require('@rollup/plugin-eslint');
 const pkg = require('./package.json');
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -26,16 +27,26 @@ module.exports = [
       babel({
         exclude: ['node_modules/**'],
         babelHelpers: 'bundled',
-        presets: [['@babel/preset-env', {
-          useBuiltIns: false,
-          modules: false
-        }]],
-        plugins: [['@babel/plugin-transform-runtime', {
-          corejs: 3,
-          helpers: false,
-          regenerator: false, // helpers 为 false 时，regenerator 参数无效
-          version: '^7.8.4'
-        }]]
+        presets: [
+          [
+            '@babel/preset-env',
+            {
+              useBuiltIns: false,
+              modules: false
+            }
+          ]
+        ],
+        plugins: [
+          [
+            '@babel/plugin-transform-runtime',
+            {
+              corejs: 3,
+              helpers: false,
+              regenerator: false, // helpers 为 false 时，regenerator 参数无效
+              version: '^7.8.4'
+            }
+          ]
+        ]
       }),
       isProd ? terser() : null,
       clear({
@@ -43,7 +54,8 @@ module.exports = [
       }),
       progress(),
       sizes(),
-      filesize()
+      filesize(),
+      eslint()
     ]
   },
   {
@@ -59,16 +71,26 @@ module.exports = [
       babel({
         exclude: ['node_modules/**'],
         babelHelpers: 'runtime',
-        presets: [['@babel/preset-env', {
-          useBuiltIns: false,
-          modules: false
-        }]],
-        plugins: [['@babel/plugin-transform-runtime', {
-          corejs: 3,
-          helpers: true,
-          regenerator: true,
-          version: '^7.8.4'
-        }]]
+        presets: [
+          [
+            '@babel/preset-env',
+            {
+              useBuiltIns: false,
+              modules: false
+            }
+          ]
+        ],
+        plugins: [
+          [
+            '@babel/plugin-transform-runtime',
+            {
+              corejs: 3,
+              helpers: true,
+              regenerator: true,
+              version: '^7.8.4'
+            }
+          ]
+        ]
       }),
       isProd ? terser() : null,
       clear({
@@ -76,8 +98,9 @@ module.exports = [
       }),
       progress(),
       sizes(),
-      filesize()
+      filesize(),
+      eslint()
     ],
-    external: id => id.includes('@babel/runtime-corejs3')
+    external: (id) => id.includes('@babel/runtime-corejs3')
   }
 ];
