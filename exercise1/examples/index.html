@@ -7,15 +7,15 @@
 </head>
 
 <body>
-<div id="app" style="background-color:aquamarine;color:cadetblue">
-  <h1>{{name}}-{{name}}</h1>
-  <h2>{{dog.name}}汪</h2>
-  <h3>{{cats[2].name}}</h3>
-  <h4>{{birds}}</h4>
-  <h5>{{count}}</h5>
-  <h6>{{hero}} {{hero}} {{hero}}</h6>
-  <span>纯文本</span>
-</div>
+  <div id="app" style="background-color:aquamarine;color:cadetblue">
+    <h1>{{name}}-{{name}}</h1>
+    <h2>{{dog.name}}汪</h2>
+    <h3>{{cats[2].name}}</h3>
+    <h4>{{birds}}</h4>
+    <h5>{{count}}</h5>
+    <h6>{{hero}} {{hero}} {{hero}}</h6>
+    <span>纯文本</span>
+  </div>
 </body>
 
 <script src="./dist/vue.js"></script>
@@ -43,7 +43,7 @@
         },
         cats: ['1', '2', {
           name: '贝妮大小姐',
-          list: [{age: 123}]
+          list: [{ age: 123 }]
         }],
         birds: ['吃了么', '吃的啥', '喝了么', []],
         count: 0,

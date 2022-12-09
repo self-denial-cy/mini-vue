@@ -1,4 +1,4 @@
-# mini-vue-2
+# mini-vue
 
 ## [exercise1](./exercise1)
 
