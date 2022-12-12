@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>index</title>
+</head>
+
+<body>
+  <div id="app">
+    <router-link to="/home">Home</router-link>
+    <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+    <router-link to="/about">About</router-link>
+    <router-view></router-view>
+  </div>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-router@3.0.0/dist/vue-router.js"></script>
+
+<script>
+  const Home = Vue.component('Home', {
+    template: `<div><router-link to="/home/a">HomeA</router-link><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span><router-link to="/home/b">HomeB</router-link><router-view></router-view></div>`
+  });
+
+  const HomeA = Vue.component('HomeA', {
+    template: `<h1>this is HomeA</h1>`
+  });
+
+  const HomeB = Vue.component('HomeB', {
+    template: `<h1>this is HomeB</h1>`
+  });
+
+  const About = Vue.component('About', {
+    template: `<div><router-link to="/about/a">AboutA</router-link><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span><router-link to="/about/b">AboutB</router-link><router-view></router-view></div>`
+  });
+
+  const AboutA = Vue.component('AboutA', {
+    template: `<h1>this is AboutA</h1>`
+  });
+
+  const AboutB = Vue.component('AboutB', {
+    template: `<h1>this is AboutB</h1>`
+  });
+
+  const router = new VueRouter({
+    routes: [
+      {
+        name: 'Home',
+        path: '/home',
+        component: Home,
+        children: [
+          {
+            name: 'HomeA',
+            path: 'a',
+            component: HomeA
+          },
+          {
+            name: 'HomeB',
+            path: 'b',
+            component: HomeB
+          }
+        ]
+      },
+      {
+        name: 'About',
+        path: '/about',
+        component: About,
+        children: [
+          {
+            name: 'AboutA',
+            path: 'a',
+            component: AboutA
+          },
+          {
+            name: 'AboutB',
+            path: 'b',
+            component: AboutB
+          }
+        ]
+      }
+    ]
+  });
+
+  const vm = new Vue({
+    el: '#app',
+    router
+  });
+</script>
+
+</html>
