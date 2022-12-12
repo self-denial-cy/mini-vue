@@ -19,6 +19,18 @@ function install(_Vue) {
       return this._routerRoot && this._routerRoot._router;
     }
   });
+
+  Vue.component('router-link', {
+    render(h) {
+      return h('a', this.$slots.default);
+    }
+  });
+
+  Vue.component('router-view', {
+    render(h) {
+      return h('div', '空');
+    }
+  });
 }
 
 export default install;

@@ -7,18 +7,21 @@
 </head>
 
 <body>
-  <div id="app">
-    <router-link to="/home">Home</router-link>
-    <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-    <router-link to="/about">About</router-link>
-    <router-view></router-view>
-  </div>
+<div id="app">
+  <router-link to="/home">Home</router-link>
+  <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+  <router-link to="/about">About</router-link>
+  <router-view></router-view>
+</div>
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
-<script src="https://unpkg.com/vue-router@3.0.0/dist/vue-router.js"></script>
+<!-- <script src="https://unpkg.com/vue-router@3.0.0/dist/vue-router.js"></script> -->
+<script src="./dist/vue-router.js"></script>
 
 <script>
+  Vue.use(VueRouter);
+
   const Home = Vue.component('Home', {
     template: `<div><router-link to="/home/a">HomeA</router-link><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span><router-link to="/home/b">HomeB</router-link><router-view></router-view></div>`
   });
