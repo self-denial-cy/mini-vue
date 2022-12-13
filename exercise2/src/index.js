@@ -11,10 +11,24 @@ class VueRouter {
     // 根据不同的模式创建对应的路由系统
     const mode = options.mode || 'hash';
     if (mode === 'hash') {
-      this.history = new HashHistory();
+      this.history = new HashHistory(this);
     } else if (mode === 'history') {
-      this.history = new BrowserHistory();
+      this.history = new BrowserHistory(this);
     }
+  }
+  match(location) {
+    return this.matcher.match(location);
+  }
+  push(location) {
+    this.history.transitionTo(location);
+  }
+  init(app) {
+    const history = this.history;
+    // 根据初始路径匹配组件渲染，之后监听路由变化即可
+    history.transitionTo(history.getCurrentLocation(), function () {
+      // 根据路径的变化匹配对应的组件进行渲染
+      history.setupListener();
+    });
   }
 }
 

@@ -8,6 +8,7 @@ function install(_Vue) {
       if (this.$options.router) {
         this._routerRoot = this;
         this._router = this.$options.router;
+        this._router.init(this);
       } else {
         this._routerRoot = this.$parent && this.$parent._routerRoot;
       }
@@ -21,8 +22,33 @@ function install(_Vue) {
   });
 
   Vue.component('router-link', {
+    props: {
+      to: {
+        type: String,
+        required: true
+      },
+      tag: {
+        type: String,
+        default: 'a'
+      }
+    },
+    methods: {
+      handler() {
+        this.$router.push(this.to);
+      }
+    },
     render(h) {
-      return h('a', this.$slots.default);
+      return h(
+        this.tag,
+        {
+          on: {
+            click: () => {
+              this.handler();
+            }
+          }
+        },
+        this.$slots.default
+      );
     }
   });
 
