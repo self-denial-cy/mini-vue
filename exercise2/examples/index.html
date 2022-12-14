@@ -7,12 +7,14 @@
 </head>
 
 <body>
-  <div id="app">
-    <router-link to="/home" tag="span">Home</router-link>
-    <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-    <router-link to="/about">About</router-link>
-    <router-view></router-view>
-  </div>
+<div id="app">
+  <h4>{{ $route }}</h4>
+  <br/>
+  <router-link to="/home" tag="span">Home</router-link>
+  <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+  <router-link to="/about">About</router-link>
+  <router-view></router-view>
+</div>
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
@@ -95,6 +97,8 @@
     el: '#app',
     router
   });
+
+  console.log(vm.$route);
 </script>
 
 </html>

@@ -16,20 +16,30 @@ class VueRouter {
       this.history = new BrowserHistory(this);
     }
   }
+
   match(location) {
     return this.matcher.match(location);
   }
+
   push(location) {
     this.history.transitionTo(location, () => {
       window.location.hash = location;
     });
   }
+
   init(app) {
     const history = this.history;
     // 根据初始路径匹配组件渲染，之后监听路由变化即可
     history.transitionTo(history.getCurrentLocation(), () => {
       // 根据路径的变化匹配对应的组件进行渲染
       history.setupListener();
+    });
+    // Vue.util.defineReactive(this, '_route', this._router.history.current);
+    // this._route 响应式
+    // current 响应式
+    // 但是 this._router.history 不是响应式，因此特殊处理了下，缓存了一个函数用于变更 _route 触发视图更新
+    history.listen((currentRoute) => {
+      app._route = currentRoute;
     });
   }
 }
