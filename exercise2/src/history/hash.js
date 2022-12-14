@@ -20,8 +20,8 @@ class HashHistory extends Base {
   // 设置监听 hash 值的变化
   setupListener() {
     // hashchange 或者 popstate 事件都可以捕获到 hash 的变化
-    window.addEventListener('hashchange', function () {
-      console.log(getHash());
+    window.addEventListener('hashchange', () => {
+      this.transitionTo(getHash());
     });
   }
   getCurrentLocation() {

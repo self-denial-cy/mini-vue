@@ -15,7 +15,8 @@ function addRouteRecord(route, pathMap, parentRecord) {
   const record = {
     name: route.name,
     path: path,
-    component: route.component // meta、props、hooks 等路由信息
+    component: route.component, // meta、props、hooks 等路由信息
+    parent: parentRecord || null
   };
   if (!pathMap[path]) {
     pathMap[path] = record;

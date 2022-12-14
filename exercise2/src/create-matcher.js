@@ -5,7 +5,6 @@ export default function createMatcher(routes) {
   // 动态添加多个路由
   function addRoutes(routes) {
     createRouteMap(routes, pathMap);
-    console.log(pathMap);
   }
   // 动态添加单个路由
   function addRoute(route) {

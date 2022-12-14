@@ -20,12 +20,14 @@ class VueRouter {
     return this.matcher.match(location);
   }
   push(location) {
-    this.history.transitionTo(location);
+    this.history.transitionTo(location, () => {
+      window.location.hash = location;
+    });
   }
   init(app) {
     const history = this.history;
     // 根据初始路径匹配组件渲染，之后监听路由变化即可
-    history.transitionTo(history.getCurrentLocation(), function () {
+    history.transitionTo(history.getCurrentLocation(), () => {
       // 根据路径的变化匹配对应的组件进行渲染
       history.setupListener();
     });
