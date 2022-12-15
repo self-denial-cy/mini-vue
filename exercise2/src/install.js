@@ -1,3 +1,6 @@
+import link from './components/link';
+import view from './components/view';
+
 export let Vue;
 
 function install(_Vue) {
@@ -28,42 +31,9 @@ function install(_Vue) {
     }
   });
 
-  Vue.component('router-link', {
-    props: {
-      to: {
-        type: String,
-        required: true
-      },
-      tag: {
-        type: String,
-        default: 'a'
-      }
-    },
-    methods: {
-      handler() {
-        this.$router.push(this.to);
-      }
-    },
-    render(h) {
-      return h(
-        this.tag,
-        {
-          on: {
-            click: () => {
-              this.handler();
-            }
-          }
-        },
-        this.$slots.default
-      );
-    }
-  });
+  Vue.component('router-link', link);
 
-  Vue.component('router-view', {
-    render(h) {
-      return h('div', '空');
-    }
-  });
+  Vue.component('router-view', view);
 }
 
 export default install;
