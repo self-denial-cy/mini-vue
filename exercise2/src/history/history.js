@@ -5,12 +5,18 @@ class BrowserHistory extends Base {
     super(router);
   }
   setupListener() {
-    window.addEventListener('popstate', function () {
-      console.log(window.location.pathname);
+    window.addEventListener('popstate', () => {
+      this.transitionTo(window.location.pathname);
     });
   }
   getCurrentLocation() {
     return window.location.pathname;
+  }
+
+  push(location) {
+    this.transitionTo(location, () => {
+      window.history.pushState({}, '', location);
+    });
   }
 }
 

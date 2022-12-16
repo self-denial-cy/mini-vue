@@ -8,6 +8,8 @@ class VueRouter {
     const routes = options.routes || [];
     //根据传入的 routes 生成映射表，方便后续操作
     this.matcher = createMatcher(routes);
+    // 保存 beforeEach hook
+    this.beforeEachHooks = [];
     // 根据不同的模式创建对应的路由系统
     const mode = options.mode || 'hash';
     if (mode === 'hash') {
@@ -21,10 +23,12 @@ class VueRouter {
     return this.matcher.match(location);
   }
 
+  beforeEach(callback) {
+    this.beforeEachHooks.push(callback);
+  }
+
   push(location) {
-    this.history.transitionTo(location, () => {
-      window.location.hash = location;
-    });
+    return this.history.push(location);
   }
 
   init(app) {
