@@ -4,18 +4,53 @@
 <head>
   <meta charset="UTF-8">
   <title>index</title>
+  <style>
+    .flex {
+      display: flex;
+    }
+
+    .mr16 {
+      margin-right: 16px;
+    }
+  </style>
 </head>
 
 <body>
   <div id="app">
-
+    <h4>{{$store.state.count}}</h4>
+    <div class="flex">
+      <button class="mr16" @click="$store.commit('add', 2)">触发Mutation</button>
+      <button class="mr16" @click="$store.dispatch('add', 3)">触发Action</button>
+    </div>
   </div>
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+<script src="./dist/vuex.js"></script>
 
 <script>
+  Vue.use(Vuex);
+
+  const store = new Vuex.Store({
+    state: {
+      count: 888
+    },
+    mutations: {
+      add(state, payload) {
+        state.count += payload;
+      }
+    },
+    actions: {
+      add({ commit }, payload) {
+        setTimeout(() => {
+          commit('add', payload);
+        }, 1500);
+      }
+    }
+  });
+
   const vm = new Vue({
+    store,
     el: '#app'
   });
 </script>
