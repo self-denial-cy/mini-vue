@@ -18,6 +18,10 @@
 <body>
   <div id="app">
     <h4>{{$store.state.count}}</h4>
+    <h4>{{$store.getters.myCount}}</h4>
+    <h4>{{$store.getters.myCount}}</h4>
+    <h4>{{$store.getters.myCount}}</h4>
+    <h4>{{$store.getters.myCount}}</h4>
     <div class="flex">
       <button class="mr16" @click="$store.commit('add', 2)">触发Mutation</button>
       <button class="mr16" @click="$store.dispatch('add', 3)">触发Action</button>
@@ -33,7 +37,8 @@
 
   const store = new Vuex.Store({
     state: {
-      count: 888
+      count: 888,
+      text: ''
     },
     mutations: {
       add(state, payload) {
@@ -45,6 +50,12 @@
         setTimeout(() => {
           commit('add', payload);
         }, 1500);
+      }
+    },
+    getters: {
+      myCount(state) {
+        console.log('runner');
+        return state.count + 1;
       }
     }
   });
