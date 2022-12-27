@@ -57,6 +57,25 @@
         console.log('runner');
         return state.count + 1;
       }
+    },
+    modules: {
+      a: {
+        state: {
+          count: 777
+        },
+        modules: {
+          b: {
+            state: {
+              count: 555
+            }
+          }
+        }
+      },
+      c: {
+        state: {
+          count: 666
+        }
+      }
     }
   });
 
