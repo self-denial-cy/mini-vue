@@ -6,6 +6,17 @@ export default class ModuleCollection {
     this.register([], options);
   }
 
+  // 获取命名空间
+  getNamespace(path) {
+    // path ['a','b']
+    let module = this.root;
+    return path.reduce((prefix, key) => {
+      module = module.getChild(key);
+      // a/b/
+      return prefix + (module.namespaced ? `${key}/` : '');
+    }, '');
+  }
+
   register(path, module) {
     const newModule = new Module(module);
     if (this.root === null) {

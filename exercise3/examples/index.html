@@ -17,11 +17,18 @@
 
 <body>
   <div id="app">
+    <h3>根模块：</h3>
     <h4>{{$store.state.count}}</h4>
     <h4>{{$store.getters.myCount}}</h4>
     <h4>{{$store.getters.myCount}}</h4>
     <h4>{{$store.getters.myCount}}</h4>
     <h4>{{$store.getters.myCount}}</h4>
+    <h3>a模块：</h3>
+    <h4>{{$store.state.a.count}}</h4>
+    <h3>b模块：</h3>
+    <h4>{{$store.state.a.b.count}}</h4>
+    <h3>c模块：</h3>
+    <h4>{{$store.state.c.count}}</h4>
     <div class="flex">
       <button class="mr16" @click="$store.commit('add', 2)">触发Mutation</button>
       <button class="mr16" @click="$store.dispatch('add', 3)">触发Action</button>
@@ -54,19 +61,32 @@
     },
     getters: {
       myCount(state) {
+        // 内部使用了计算属性，依赖不变的话只会执行一次计算
         console.log('runner');
         return state.count + 1;
       }
     },
     modules: {
       a: {
+        namespaced: true,
         state: {
           count: 777
         },
+        mutations: {
+          add(state, payload) {
+            state.count += payload;
+          }
+        },
         modules: {
           b: {
+            namespaced: true,
             state: {
               count: 555
+            },
+            mutations: {
+              add(state, payload) {
+                state.count += payload;
+              }
             }
           }
         }
@@ -74,6 +94,11 @@
       c: {
         state: {
           count: 666
+        },
+        mutations: {
+          add(state, payload) {
+            state.count += payload;
+          }
         }
       }
     }

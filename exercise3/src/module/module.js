@@ -7,6 +7,10 @@ export default class Module {
     this._children = {};
   }
 
+  get namespaced() {
+    return !!this._raw.namespaced;
+  }
+
   addChild(key, module) {
     this._children[key] = module;
   }

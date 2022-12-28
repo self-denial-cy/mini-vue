@@ -10,15 +10,17 @@ function installModule(store, rootState, path, rootModule) {
     }, rootState);
     parent[path[path.length - 1]] = rootModule.state;
   }
+  const namespace = store._modules.getNamespace(path);
+  console.log(namespace);
   rootModule.forEachMutation((mutationKey, mutation) => {
-    store._mutations[mutationKey] = store._mutations[mutationKey] || [];
-    store._mutations[mutationKey].push((payload) => {
+    store._mutations[namespace + mutationKey] = store._mutations[namespace + mutationKey] || [];
+    store._mutations[namespace + mutationKey].push((payload) => {
       mutation(rootModule.state, payload);
     });
   });
   rootModule.forEachAction((actionKey, action) => {
-    store._actions[actionKey] = store._actions[actionKey] || [];
-    store._actions[actionKey].push((payload) => {
+    store._actions[namespace + actionKey] = store._actions[namespace + actionKey] || [];
+    store._actions[namespace + actionKey].push((payload) => {
       action(store, payload);
     });
   });
@@ -64,7 +66,13 @@ class Store {
     installModule(this, state, [], this._modules.root);
     // 创建 Vue 实例，实现响应式 state 和计算属性
     resetStoreVM(this, state);
-    console.log(this);
+    // 实现 commit 和 dispatch
+    this.commit = (type, payload) => {
+      this._mutations[type].forEach((fn) => fn(payload));
+    };
+    this.dispatch = (type, payload) => {
+      this._actions[type].forEach((fn) => fn(payload));
+    };
   }
 
   get state() {
