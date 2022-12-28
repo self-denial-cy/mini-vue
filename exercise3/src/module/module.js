@@ -32,4 +32,8 @@ export default class Module {
       forEachValue(this._raw.getters, callback);
     }
   }
+
+  forEachModule(callback) {
+    forEachValue(this._children, callback);
+  }
 }

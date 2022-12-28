@@ -1,11 +1,15 @@
 import install, { Vue } from './install';
 import ModuleCollection from './module/module-collection';
+import { forEachValue } from './utils';
 
 function installModule(store, rootState, path, rootModule) {
   if (path.length > 0) {
     // 只有是子模块的情况，才考虑将子模块的状态定义在根模块上
+    const parent = path.slice(0, -1).reduce((start, current) => {
+      return start[current];
+    }, rootState);
+    parent[path[path.length - 1]] = rootModule.state;
   }
-
   rootModule.forEachMutation((mutationKey, mutation) => {
     store._mutations[mutationKey] = store._mutations[mutationKey] || [];
     store._mutations[mutationKey].push((payload) => {
@@ -23,6 +27,29 @@ function installModule(store, rootState, path, rootModule) {
       return getter(rootModule.state);
     };
   });
+  rootModule.forEachModule((moduleKey, module) => {
+    installModule(store, rootState, path.concat(moduleKey), module);
+  });
+}
+
+function resetStoreVM(store, state) {
+  store.getters = {};
+  const computed = {};
+  const wrappedGetters = store._wrappedGetters;
+  forEachValue(wrappedGetters, (getterKey, getter) => {
+    computed[getterKey] = getter;
+    Object.defineProperty(store.getters, getterKey, {
+      get() {
+        return store._vm[getterKey];
+      }
+    });
+  });
+  store._vm = new Vue({
+    data: {
+      $$state: state
+    },
+    computed
+  });
 }
 
 class Store {
@@ -35,7 +62,15 @@ class Store {
     // 传入根状态，将所有的子状态都定义在这个根状态上
     const state = this._modules.root.state;
     installModule(this, state, [], this._modules.root);
+    // 创建 Vue 实例，实现响应式 state 和计算属性
+    resetStoreVM(this, state);
+    console.log(this);
   }
+
+  get state() {
+    return this._vm._data.$$state;
+  }
+
   // constructor(options) {
   //   const state = options.state;
   //   const mutations = options.mutations;
@@ -73,9 +108,6 @@ class Store {
   //   this.dispatch = (type, payload) => {
   //     this.actions[type](this, payload);
   //   };
-  // }
-  // get state() {
-  //   return this._vm._data.$$state;
   // }
   // commit(type, payload) {
   //   this.mutations[type](this.state, payload);
