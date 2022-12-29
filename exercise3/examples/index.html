@@ -46,7 +46,24 @@
 <script>
   Vue.use(Vuex);
 
+  // 持久化插件
+  const persist = function (store) {
+    // 每次刷新浏览器都会从本地化缓存中读取上次缓存的根状态
+    const rootState = localStorage.getItem('VUEX_PERSIST');
+    if (rootState) {
+      store.replaceState(JSON.parse(rootState));
+    }
+    store.subscribe(function (mutation, rootState) {
+      // 每次触发 mutation 变更，都会执行该回调
+      console.log(mutation, rootState);
+      localStorage.setItem('VUEX_PERSIST', JSON.stringify(rootState));
+    });
+  };
+
   const store = new Vuex.Store({
+    plugins: [
+      persist
+    ],
     state: {
       count: 888,
       text: ''
