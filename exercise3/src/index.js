@@ -8,10 +8,13 @@ function installModule(store, rootState, path, rootModule) {
     const parent = path.slice(0, -1).reduce((start, current) => {
       return start[current];
     }, rootState);
-    parent[path[path.length - 1]] = rootModule.state;
+    // 通过 registerModule 重置 Vue 实例时，state 是已经 Observe 之后的对象，对于已经存在 __ob__ 属性的对象，是不会再 Observe 处理的
+    // 因此需要通过 Vue.set 来动态添加新属性
+    Vue.set(parent, path[path.length - 1], rootModule.state);
+    // parent[path[path.length - 1]] = rootModule.state;
   }
   const namespace = store._modules.getNamespace(path);
-  console.log(namespace);
+  // console.log(namespace);
   rootModule.forEachMutation((mutationKey, mutation) => {
     store._mutations[namespace + mutationKey] = store._mutations[namespace + mutationKey] || [];
     store._mutations[namespace + mutationKey].push((payload) => {
@@ -35,6 +38,7 @@ function installModule(store, rootState, path, rootModule) {
 }
 
 function resetStoreVM(store, state) {
+  const oldVM = store._vm;
   store.getters = {};
   const computed = {};
   const wrappedGetters = store._wrappedGetters;
@@ -48,10 +52,16 @@ function resetStoreVM(store, state) {
   });
   store._vm = new Vue({
     data: {
-      $$state: state
+      $$state: state // 通过 registerModule 重置 Vue 实例时，state 是已经 Observe 之后的对象，对于已经存在 __ob__ 属性的对象，是不会再 Observe 处理的
     },
     computed
   });
+  // 重置 Vue 实例，销毁旧的 Vue 实例
+  if (oldVM) {
+    Vue.nextTick(() => {
+      oldVM.$destroy();
+    });
+  }
 }
 
 class Store {
@@ -77,6 +87,15 @@ class Store {
 
   get state() {
     return this._vm._data.$$state;
+  }
+
+  registerModule(path, module) {
+    // 这里只考虑 path 为数组的情况
+    this._modules.register(path, module);
+    const state = this._modules.root.state;
+    // 动态添加的 getters 未生效，需要重置 Vue 实例
+    installModule(this, state, path, module.newModule);
+    resetStoreVM(this, state);
   }
 
   // constructor(options) {

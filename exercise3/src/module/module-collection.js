@@ -19,6 +19,8 @@ export default class ModuleCollection {
 
   register(path, module) {
     const newModule = new Module(module);
+    // 将包装后的 module 挂载在原 module 上暴露出去
+    module.newModule = newModule;
     if (this.root === null) {
       this.root = newModule;
     } else {
