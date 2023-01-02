@@ -33,7 +33,7 @@ function installModule(store, rootState, path, rootModule) {
   rootModule.forEachAction((actionKey, action) => {
     store._actions[namespace + actionKey] = store._actions[namespace + actionKey] || [];
     store._actions[namespace + actionKey].push((payload) => {
-      action(store, payload);
+      return action(store, payload);
     });
   });
   rootModule.forEachGetter((getterKey, getter) => {
@@ -99,7 +99,8 @@ class Store {
       this._mutations[type].forEach((fn) => fn(payload));
     };
     this.dispatch = (type, payload) => {
-      this._actions[type].forEach((fn) => fn(payload));
+      // 实现简易版的 dispatch 支持 Promise 回调
+      return Promise.all(this._actions[type].map((fn) => fn(payload)));
     };
     // 插件在初始化完成之后自动执行
     this.plugins.forEach((plugin) => plugin(this));

@@ -35,7 +35,7 @@
     <div class="flex">
       <button class="mr16" @click="$store.commit('add', 2)">触发Mutation1</button>
       <button class="mr16" @click="$store.commit('d/add', 1)">触发Mutation2</button>
-      <button class="mr16" @click="$store.dispatch('add', 3)">触发Action</button>
+      <button class="mr16" @click="triggerAction">触发Action</button>
     </div>
   </div>
 </body>
@@ -75,9 +75,12 @@
     },
     actions: {
       add({ commit }, payload) {
-        setTimeout(() => {
-          commit('add', payload);
-        }, 1500);
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            commit('add', payload);
+            resolve();
+          }, 1500);
+        });
       }
     },
     getters: {
@@ -144,7 +147,14 @@
 
   const vm = new Vue({
     store,
-    el: '#app'
+    el: '#app',
+    methods: {
+      triggerAction() {
+        this.$store.dispatch('add', 3).then(() => {
+          console.log('Vuex Action 支持 Promise 回调');
+        });
+      }
+    }
   });
 </script>
 
