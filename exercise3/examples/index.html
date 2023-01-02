@@ -61,6 +61,8 @@
   };
 
   const store = new Vuex.Store({
+    // 开启严格模式，限制只能通过 mutation 方法修改 state，否则报警告
+    strict: true,
     plugins: [
       persist
     ],

@@ -17,7 +17,10 @@ function installModule(store, rootState, path, rootModule) {
     }, rootState);
     // 通过 registerModule 重置 Vue 实例时，state 是已经 Observe 之后的对象，对于已经存在 __ob__ 属性的对象，是不会再 Observe 处理的
     // 因此需要通过 Vue.set 来动态添加新属性
-    Vue.set(parent, path[path.length - 1], rootModule.state);
+    store._withCommiting(() => {
+      // 合法修改 state
+      Vue.set(parent, path[path.length - 1], rootModule.state);
+    });
     // parent[path[path.length - 1]] = rootModule.state;
   }
   const namespace = store._modules.getNamespace(path);
@@ -25,7 +28,10 @@ function installModule(store, rootState, path, rootModule) {
   rootModule.forEachMutation((mutationKey, mutation) => {
     store._mutations[namespace + mutationKey] = store._mutations[namespace + mutationKey] || [];
     store._mutations[namespace + mutationKey].push((payload) => {
-      mutation(getState(store, path), payload);
+      // 合法修改
+      store._withCommiting(() => {
+        mutation(getState(store, path), payload);
+      });
       // 触发缓存的订阅事件
       store.subscribes.forEach((fn) => fn({ type: namespace + mutationKey, payload }, store.state));
     });
@@ -69,6 +75,18 @@ function resetStoreVM(store, state) {
     },
     computed
   });
+  if (store.strict) {
+    // 如果开启严格模式，开启对 state 的监控
+    // 这个 watch 会浪费性能，一般只会在开发环境中开启严格模式
+    store._vm.$watch(
+      () => store.state,
+      () => {
+        console.assert(store._commiting, '非法修改');
+      },
+      { deep: true, sync: true }
+      // deep 为 true 监听到 state 内部变化，sync 为 true 一监听到变化，同步触发监听函数，否则监听函数会被 queueWatcher 缓存起来异步执行
+    );
+  }
   // 重置 Vue 实例，销毁旧的 Vue 实例
   if (oldVM) {
     Vue.nextTick(() => {
@@ -79,6 +97,10 @@ function resetStoreVM(store, state) {
 
 class Store {
   constructor(options) {
+    // 是否开启严格模式
+    this.strict = options.strict || false;
+    // 通过该变量判断是否在 mutation 中修改 state，true 表示合法修改，false 表示非法修改，报警告
+    this._commiting = false;
     // 将传入的选项进行一个格式化处理
     this._modules = new ModuleCollection(options);
     this._mutations = Object.create(null);
@@ -106,6 +128,13 @@ class Store {
     this.plugins.forEach((plugin) => plugin(this));
   }
 
+  // 一次合法修改
+  _withCommiting(fn) {
+    this._commiting = true;
+    fn();
+    this._commiting = false;
+  }
+
   get state() {
     return this._vm._data.$$state;
   }
@@ -126,7 +155,9 @@ class Store {
   // 替换根状态
   replaceState(state) {
     // 替换的时候会将 state 包装成响应式对象
-    this._vm._data.$$state = state;
+    this._withCommiting(() => {
+      this._vm._data.$$state = state;
+    });
   }
 }
 
