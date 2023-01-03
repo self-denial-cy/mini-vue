@@ -50,7 +50,7 @@ module.exports = [
       }),
       isProd ? terser() : null,
       clear({
-        targets: ['dist']
+        targets: ['dist', 'examples/dist']
       }),
       progress(),
       sizes(),
@@ -94,7 +94,7 @@ module.exports = [
       }),
       isProd ? terser() : null,
       clear({
-        targets: ['dist']
+        targets: ['dist', 'examples/dist']
       }),
       progress(),
       sizes(),
