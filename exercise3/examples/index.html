@@ -19,6 +19,7 @@
   <div id="app">
     <h3>根模块：</h3>
     <h4>{{$store.state.count}}</h4>
+    <h4>{{count}}</h4>
     <h4>{{$store.getters.myCount}}</h4>
     <h4>{{$store.getters.myCount}}</h4>
     <h4>{{$store.getters.myCount}}</h4>
@@ -147,13 +148,46 @@
     }
   });
 
+  // 简易版 mapState（不考虑 module 中的 state）
+  function mapState(targets) {
+    const map = {};
+    for (let i = 0; i < targets.length; i++) {
+      const targetKey = targets[i];
+      // 这里不能是箭头函数，要保证 this 的指向
+      map[targetKey] = function () {
+        return this.$store.state[targetKey];
+      };
+    }
+    return map;
+  }
+
+  // 简易版 mapActions（不考虑 module 中的 actions）
+  function mapActions(targets) {
+    const map = {};
+    for (let i = 0; i < targets.length; i++) {
+      const targetKey = targets[i];
+      // 这里不能是箭头函数，要保证 this 的指向
+      map[targetKey] = function (payload) {
+        return this.$store.dispatch(targetKey, payload);
+      };
+    }
+    return map;
+  }
+
   const vm = new Vue({
     store,
     el: '#app',
+    computed: {
+      ...mapState(['count'])
+    },
     methods: {
+      ...mapActions(['add']),
       triggerAction() {
+        this.add(2).then(() => {
+          console.log(1, 'Vuex Action 支持 Promise 回调');
+        });
         this.$store.dispatch('add', 3).then(() => {
-          console.log('Vuex Action 支持 Promise 回调');
+          console.log(2, 'Vuex Action 支持 Promise 回调');
         });
       }
     }
