@@ -7,13 +7,13 @@
 </head>
 
 <body>
-  <div id="app" style="background-color:aquamarine;color:cadetblue">
-    <h1>{{name}}</h1>
-    <h2>{{dog.name}}汪</h2>
-    <h3>{{cats[2].name}}</h3>
-    <h4>{{birds}}</h4>
-    <h5>{{count}}</h5>
-    <h6>{{hero}} {{hero}} {{hero}}</h6>
+  <div id="app" style="display:flex;flex-direction:column;align-items:center;">
+    <p>{{name}}</p>
+    <p>{{dog.name}}汪</p>
+    <p>{{cats[2].name}}</p>
+    <p>{{birds}}</p>
+    <p>{{count}}</p>
+    <p>{{hero}} {{hero}} {{hero}}</p>
   </div>
 </body>
 
@@ -71,9 +71,9 @@
     }
   })
 
-  vm.$nextTick(() => {
-    console.log(document.getElementById('app').innerHTML)
-  })
+  // vm.$nextTick(() => {
+  //   console.log(document.getElementById('app').innerHTML)
+  // })
 
   vm.count = 1
   vm.count = 2
@@ -83,19 +83,19 @@
 
   // console.log(document.getElementById('app').innerHTML)
 
-  vm.$nextTick(() => {
-    console.log(document.getElementById('app').innerHTML)
-  })
+  // vm.$nextTick(() => {
+  //   console.log(document.getElementById('app').innerHTML)
+  // })
 
-  setTimeout(() => {
-    vm.birds[3].push('喝的啥')
-    // vm.birds.push('喝的啥')
-    vm.firstName = '嘎嘎1'
-    vm.firstName = '嘎嘎2'
-    vm.firstName = '嘎嘎3'
-  }, 500)
+  // setTimeout(() => {
+  //   vm.birds[3].push('喝的啥')
+  //   vm.birds.push('喝的啥')
+  //   vm.firstName = '嘎嘎1'
+  //   vm.firstName = '嘎嘎2'
+  //   vm.firstName = '嘎嘎3'
+  // }, 500)
 
-  vm.firstName = '嘎嘎4'
+  // vm.firstName = '嘎嘎4'
 
   vm.name = []
   setTimeout(() => {
@@ -104,9 +104,9 @@
 
   // console.log(vm)
 
-  setInterval(() => {
-    vm.addCount()
-  }, 1000)
+  // setInterval(() => {
+  //   vm.addCount()
+  // }, 1000)
 </script>
 
 </html>

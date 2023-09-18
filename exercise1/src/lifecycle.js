@@ -7,7 +7,7 @@ export function initLifeCycle(Vue) {
   Vue.prototype._update = function (vnode) {
     const vm = this;
     const el = vm.$el;
-    // console.log(vnode)
+    console.log(vnode);
 
     const prevVNode = vm._vnode;
     if (prevVNode) {

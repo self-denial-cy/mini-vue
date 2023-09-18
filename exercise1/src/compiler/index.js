@@ -9,14 +9,14 @@ export function compileToFunction(template) {
   // 第一步：将 template 转换为 ast 语法树
   let ast = parseHTML(template);
 
-  // console.log(ast)
+  console.log(ast);
 
   // 第二步：生成 render 方法，调用 render 方法时，通过 call 方法传入当前 Vue 实例
   const code = codegen(ast);
-  // console.log(code)
+  console.log(code);
   // 模板语法的实现原理：with + new Function
   const render = new Function(`with(this){return ${code}}`);
-  // console.log(render.toString())
+  console.log(render.toString());
   return render;
 }
 
