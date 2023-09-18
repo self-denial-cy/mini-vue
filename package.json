@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "precommit": "npm run precommit:exercise1 && npm run precommit:exercise2 && npm run precommit:exercise3",
     "precommit:exercise1": "lint-staged --cwd exercise1",
