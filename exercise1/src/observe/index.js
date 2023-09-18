@@ -23,7 +23,7 @@ class Observer {
     // data.__ob__ = this
     Object.defineProperty(data, '__ob__', {
       value: this,
-      enumerable: false
+      enumerable: false // 不可枚举
     });
 
     if (Array.isArray(data)) {
@@ -67,7 +67,7 @@ function dependArray(arr) {
 export function defineReactive(target, key, value) {
   const dep = new Dep(); // 闭包空间不会被销毁，每个属性都有自己的 Dep 空间
   /* 递归处理 */
-  const childObserver = observe(value); // value 为对象或数组时，会返回 Observer 实例，否则为 undefined
+  let childObserver = observe(value); // value 为对象或数组时，会返回 Observer 实例，否则为 undefined
   /* 这里使用一个闭包 */
   /* 属性劫持 */
   Object.defineProperty(target, key, {
@@ -88,7 +88,7 @@ export function defineReactive(target, key, value) {
     set(v) {
       if (v === value) return;
       // 赋新值时，如果是引用类型，继续劫持
-      observe(v);
+      childObserver = observe(v); // 修复如果赋的新值为数组，那么该数组对应的 Dep 将无法收集到依赖，后续该数组的 push、pop 等将无法触发更新的问题
       value = v;
       dep.notify();
     }

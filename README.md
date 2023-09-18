@@ -7,8 +7,7 @@
 ### 安装依赖
 
 ```shell
-# rollup-plugin-sizes 很久不更新，peer 需要 rollup@"^2.0.0"，但是项目中使用的 rollup@"^3.4.0"，但是不影响
-npm i --legacy-peer-deps
+npm i
 
 cd examples
 
@@ -34,7 +33,7 @@ npm run server
 ### 安装依赖
 
 ```shell
-npm i --legacy-peer-deps
+npm i
 
 cd examples
 
@@ -60,7 +59,7 @@ npm run server
 ### 安装依赖
 
 ```shell
-npm i --legacy-peer-deps
+npm i
 
 cd examples
 

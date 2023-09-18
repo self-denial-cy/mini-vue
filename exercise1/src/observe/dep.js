@@ -31,7 +31,7 @@ export function pushTarget(watcher) {
 
 export function popTarget() {
   stack.pop();
-  Dep.target = stack[stack.length - 1];
+  Dep.target = stack[stack.length - 1] || null;
 }
 
 export default Dep;

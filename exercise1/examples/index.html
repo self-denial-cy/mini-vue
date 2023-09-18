@@ -1,20 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8" />
   <title>index</title>
 </head>
 
 <body>
   <div id="app" style="background-color:aquamarine;color:cadetblue">
-    <h1>{{name}}-{{name}}</h1>
+    <h1>{{name}}</h1>
     <h2>{{dog.name}}汪</h2>
     <h3>{{cats[2].name}}</h3>
     <h4>{{birds}}</h4>
     <h5>{{count}}</h5>
     <h6>{{hero}} {{hero}} {{hero}}</h6>
-    <span>纯文本</span>
   </div>
 </body>
 
@@ -51,6 +50,11 @@
         lastName: '侠'
       }
     },
+    methods: {
+      addCount() {
+        this.count++
+      }
+    },
     computed: {
       hero() {
         // console.log('run computed')
@@ -59,6 +63,9 @@
     },
     watch: {
       firstName(newVal, oldVal) {
+        console.log(newVal, oldVal)
+      },
+      name(newVal, oldVal) {
         console.log(newVal, oldVal)
       }
     }
@@ -86,11 +93,20 @@
     vm.firstName = '嘎嘎1'
     vm.firstName = '嘎嘎2'
     vm.firstName = '嘎嘎3'
-  }, 2500)
+  }, 500)
 
   vm.firstName = '嘎嘎4'
 
+  vm.name = []
+  setTimeout(() => {
+    vm.name.push(1)
+  }, 2000)
+
   // console.log(vm)
+
+  setInterval(() => {
+    vm.addCount()
+  }, 1000)
 </script>
 
 </html>

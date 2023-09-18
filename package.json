@@ -12,13 +12,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/self-denial-cy/mini-vue-2.git"
+    "url": "git+https://github.com/self-denial-cy/mini-vue.git"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/self-denial-cy/mini-vue-2/issues"
+    "url": "https://github.com/self-denial-cy/mini-vue/issues"
   },
-  "homepage": "https://github.com/self-denial-cy/mini-vue-2#readme",
+  "homepage": "https://github.com/self-denial-cy/mini-vue#readme",
   "devDependencies": {
     "conventional-changelog-cli": "^1.2.0",
     "husky": "^0.13.1",

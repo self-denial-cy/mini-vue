@@ -75,6 +75,7 @@ class Watcher {
   }
 
   run() {
+    // 数组的 push、pop 等操作可以触发 Dep notify，直至触发 Watcher update，但是 newVal 和 oldVal 还是指向同一个数组
     const oldVal = this.value;
     const newVal = (this.value = this.get());
     if (this.user) {
@@ -102,7 +103,7 @@ function queueWatcher(watcher) {
 }
 
 function flushSchedulerQueue() {
-  const flushQueue = queue.slice(0);
+  const flushQueue = queue.slice(0); // 这里取一个备份出来执行，可以尽快释放队列
   queue = [];
   has = {};
   pending = false;
@@ -112,7 +113,7 @@ function flushSchedulerQueue() {
 let callbacks = [];
 let waiting = false;
 
-// nextTick 将传入的回调函数缓存成一个异步执行队列，与 Watcher 的异步刷新队列拉到了同一维度
+// nextTick 将传入的回调函数缓存成一个异步执行队列，与 Watcher 的异步刷新队列拉到了同一维度【从而有了先后顺序】
 // Vue 中并没有直接采用某个 api 而是采用了优雅降级的方式
 // Promise（不兼容 ie） MutationObserver（h5 api） setImmediate（ie 独有） setTimeout
 export function nextTick(cb) {

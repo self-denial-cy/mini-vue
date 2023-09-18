@@ -13,6 +13,9 @@ export function initState(vm) {
   if (opts.watch) {
     initWatch(vm);
   }
+  if (opts.methods) {
+    initMethods(vm);
+  }
 }
 
 function proxy(vm, target, key) {
@@ -60,10 +63,11 @@ function initComputed(vm) {
 
 function defineComputed(target, key, userDef) {
   // const getter = typeof userDef === 'function' ? userDef : userDef.get
-  const setter = userDef.set || (() => {});
+  // eslint-disable-next-line prettier/prettier
+  const setter = userDef.set || (() => { });
   Object.defineProperty(target, key, {
     get: createComputedGetter(key),
-    set: setter
+    set: setter.bind(target) // computed setter 中 this 指向当前实例
   });
 }
 
@@ -102,10 +106,20 @@ function initWatch(vm) {
 function createWatcher(vm, key, handler) {
   // 这里暂时只考虑前两种情况
   if (typeof handler === 'string') {
-    // TODO 将 methods 上的方法映射到 vm 上
     handler = vm[handler];
   }
   return vm.$watch(key, handler);
+}
+
+function initMethods(vm) {
+  let methods = vm.$options.methods;
+
+  vm._methods = methods;
+
+  for (const key in methods) {
+    methods[key] = methods[key].bind(vm);
+    proxy(vm, '_methods', key);
+  }
 }
 
 export function initStateMixin(Vue) {
