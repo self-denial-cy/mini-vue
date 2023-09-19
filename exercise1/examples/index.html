@@ -3,10 +3,13 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>index</title>
+  <title>响应式原理</title>
 </head>
 
 <body>
+  <div style="display:flex;flex-direction:column;align-items:center;">
+    <a href="./component.html">组件渲染及更新</a>
+  </div>
   <div id="app" style="display:flex;flex-direction:column;align-items:center;">
     <p>{{name}}</p>
     <p>{{dog.name}}汪</p>
@@ -57,7 +60,6 @@
     },
     computed: {
       hero() {
-        // console.log('run computed')
         return this.firstName + this.lastName
       }
     },

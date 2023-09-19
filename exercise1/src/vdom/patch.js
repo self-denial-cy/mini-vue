@@ -191,9 +191,9 @@ function updateChildren(el, prevChildren, nextChildren) {
       patchVNode(prevStartVNode, nextEndVNode);
       el.insertBefore(prevStartVNode.el, prevEndVNode.el.nextSibling);
       prevStartVNode = prevChildren[++prevStartIndex];
-      nextEndVNode = [--nextEndIndex];
+      nextEndVNode = nextChildren[--nextEndIndex];
     } else {
-      // 乱序 diff
+      // 乱序 diff，比如 a b c d ====> b m a p c q
       // 根据 prevChildren 生成映射表，以尽量复用老节点
       // nextChildren 去映射表中寻找映射节点，找到则移动，找不到则添加
       // 最终映射表中还剩下的则被删除
