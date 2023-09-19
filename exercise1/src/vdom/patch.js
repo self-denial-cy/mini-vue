@@ -47,7 +47,7 @@ export function createEl(vnode) {
   if (typeof tag === 'string') {
     // 区分是组件还是元素
     if (createComponent(vnode)) {
-      return vnode.componentInstance.$el;
+      return (vnode.el = vnode.componentInstance.$el);
     }
     // 标签
     vnode.el = document.createElement(tag); // 将真实节点与虚拟节点对应起来，后续方便更新
@@ -76,14 +76,15 @@ export function patchProps(el, prevProps = {}, props = {}) {
       el.removeAttribute(key);
     }
   }
-
   for (const key in props) {
     if (key === 'style') {
       for (const styleKey in props['style']) {
         el.style[styleKey] = props['style'][styleKey];
       }
     } else {
-      el.setAttribute(key, props[key]);
+      if (key !== 'hook') {
+        el.setAttribute(key, props[key]);
+      }
     }
   }
 }

@@ -19,6 +19,8 @@
     template: `<button style="margin-bottom:10px;">全局组件</button>`
   })
 
+  console.log(Vue.options)
+
   const Sub = Vue.extend({
     template: `
       <div style="display:flex;flex-direction:column;align-items:center;">
@@ -32,6 +34,8 @@
       }
     }
   })
+
+  console.log(Sub.options)
 
   new Sub().$mount('#app')
 </script>

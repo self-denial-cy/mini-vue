@@ -22,9 +22,8 @@ export function compileToFunction(template) {
 
 function codegen(ast) {
   const children = genChildren(ast.children);
-  const code = `_c("${ast.tag}",${ast.attrs && ast.attrs.length ? genProps(ast.attrs) : 'null'}${
-    ast.children && ast.children.length ? `,${children}` : ''
-  })`;
+  // eslint-disable-next-line prettier/prettier
+  const code = `_c("${ast.tag}",${ast.attrs && ast.attrs.length ? genProps(ast.attrs) : 'null'}${ast.children && ast.children.length ? `,${children}` : ''})`;
   return code;
 }
 
@@ -35,8 +34,10 @@ function genProps(attrs) {
     if (attr.name === 'style') {
       const styles = {};
       attr.value.split(';').forEach((item) => {
-        const [key, val] = item.split(':');
-        styles[key] = val;
+        if (item) {
+          const [key, val] = item.split(':');
+          styles[key] = val;
+        }
       });
       attr.value = styles;
     }
