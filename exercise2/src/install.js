@@ -9,6 +9,7 @@ function install(_Vue) {
   Vue.mixin({
     beforeCreate() {
       if (this.$options.router) {
+        // Vue 根实例
         this._routerRoot = this;
         this._router = this.$options.router;
         this._router.init(this);

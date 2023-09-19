@@ -13,7 +13,7 @@ export default {
       parent = parent.$parent;
     }
     const record = route.matched[depth];
-    if (!record) return h();
+    if (!record) return;
     // h 函数可以渲染标签、组件
     // 渲染组件时，第二个参数会传递给组件实例 $vnode.data 上，具体逻辑后续 debug Vue 源码查看
     return h(record.component, { routerView: true });

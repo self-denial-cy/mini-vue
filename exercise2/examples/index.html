@@ -1,18 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <title>index</title>
+  <meta charset="utf-8" />
+  <title>Vue Router 原理</title>
 </head>
 
 <body>
-  <div id="app">
-    <h4>{{ $route }}</h4>
-    <br />
-    <router-link to="/home" tag="span">Home</router-link>
-    <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-    <router-link to="/about">About</router-link>
+  <div id="app" style="display:flex;flex-direction:column;align-items:center;">
+    <p>{{ $route }}</p>
+    <div style="margin-bottom:10px;">
+      <router-link to="/home" tag="button">Home</router-link>
+      <span>&nbsp;|&nbsp;</span>
+      <router-link to="/about" tag="button">About</router-link>
+    </div>
     <router-view></router-view>
   </div>
 </body>
@@ -25,31 +26,31 @@
   Vue.use(VueRouter);
 
   const Home = Vue.component('Home', {
-    template: `<div><router-link to="/home/a">HomeA</router-link><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span><router-link to="/home/b">HomeB</router-link><router-view></router-view></div>`
+    template: `<div><router-link to="/home/a" tag="button">HomeA</router-link><span>&nbsp;|&nbsp;</span><router-link to="/home/b" tag="button">HomeB</router-link><router-view></router-view></div>`
   });
 
   const HomeA = Vue.component('HomeA', {
-    template: `<h1>this is HomeA</h1>`
+    template: `<p>this is HomeA</p>`
   });
 
   const HomeB = Vue.component('HomeB', {
-    template: `<h1>this is HomeB</h1>`
+    template: `<p>this is HomeB</p>`
   });
 
   const About = Vue.component('About', {
-    template: `<div><router-link to="/about/a">AboutA</router-link><span>&nbsp;&nbsp;|&nbsp;&nbsp;</span><router-link to="/about/b">AboutB</router-link><router-view></router-view></div>`
+    template: `<div><router-link to="/about/a" tag="button">AboutA</router-link><span>&nbsp;|&nbsp;</span><router-link to="/about/b" tag="button">AboutB</router-link><router-view></router-view></div>`
   });
 
   const AboutA = Vue.component('AboutA', {
-    template: `<h1>this is AboutA</h1>`
+    template: `<p>this is AboutA</p>`
   });
 
   const AboutB = Vue.component('AboutB', {
-    template: `<h1>this is AboutB</h1>`
+    template: `<p>this is AboutB</p>`
   });
 
   const router = new VueRouter({
-    mode: 'history',
+    mode: 'hash',
     routes: [
       {
         name: 'Home',
@@ -95,8 +96,8 @@
   }]);
 
   router.beforeEach((from, to, next) => {
-    console.log(from);
-    console.log(to);
+    // console.log(from);
+    // console.log(to);
     setTimeout(() => {
       next();
     }, 1000);
@@ -107,7 +108,7 @@
     router
   });
 
-  console.log(vm.$route);
+  // console.log(vm.$route);
 </script>
 
 </html>
